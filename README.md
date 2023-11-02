@@ -61,10 +61,10 @@ Teams will look at the taskboard and get the tasks:
 4. when its done, send it back with ```[Task][Level:3][Art][Prio:1][solved]```
 
 #### 3-3 Team: Engine
-1. Get all tasks with [Task][Level:2-3][Engine][Prio:1][not solved]
+1. Get all tasks with ```[Task][Level:2-3][Engine][Prio:1][not solved]```
 2. Build logic without methods first.
 3. Search and Look for code and apply it
-4. when its done, send it back with [Task][Level:3][Engine][Prio:1][solved]
+4. when its done, send it back with ```[Task][Level:3][Engine][Prio:1][solved]```
 
 #### 3-3 Team: Art
 1. Get all tasks with ```[Task][Level:2-3][Art][Prio:1][not solved]```
@@ -81,10 +81,10 @@ Taskboard looks like this now:
 
 ### Quality check Phase
 4 Team Quality ONE
-1. Get all [Task][Level:3-*][solved] and check them if they are logical, good quality, not just a few words / code, no place holders
+1. Get all ```[Task][Level:3-*][solved]``` and check them if they are logical, good quality, not just a few words / code, no place holders
 2. can we make it complete? does the chain from the first to the last make sense?
 3. ask user if this is statisfying, if not try to reprocess it of let the user give the answer:
- [Question][Level3][There is missing info for frontend task]
+ ```[Question][Level3][There is missing info for frontend task]```
 4. Save the whole plan and make it a pattern / basic plan for the specific topic. Rate it on the quality
 5. Make them all ```[Task][Level:4-*][TEAM][Prio:1][Not solved][Build choose options for the menue]``` 
 
