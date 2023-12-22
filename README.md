@@ -185,4 +185,9 @@ Taskboard looks like this now:
 4. ask user if this is statisfied, if not try to reprocess it or let the user give the answer
 5. Save the whole plan and make it a pattern / basic plan for the specific topic. Rate it on the quality
 
+Contributing
 
+Please read CONTRIBUTING.md for details on contributing to this project.
+License
+
+This project is licensed under the MIT license - see the LICENSE file for details.
