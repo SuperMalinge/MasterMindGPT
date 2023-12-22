@@ -185,6 +185,63 @@ Taskboard looks like this now:
 4. ask user if this is statisfied, if not try to reprocess it or let the user give the answer
 5. Save the whole plan and make it a pattern / basic plan for the specific topic. Rate it on the quality
 
+
+6 Debug and Error
+
+    Get all tasks with [Task][Level:6-*][*TEAM*][Prio:*][not solved]
+    Debug and fix errors.
+    when its done, send it back with [solved task]
+
+6-1 Team: GUI Debug
+
+    Get all tasks with [Task][Level:6-1][GUI][Prio:1][not solved]
+    Debug and fix GUI errors.
+    when its done, send it back with [solved task]
+
+6-2 Team: Backend Debug
+
+    Get all tasks with [Task][Level:6-2][Backend][Prio:1][not solved]
+    Debug and fix Backend errors.
+    when its done, send it back with [solved task]
+
+6-3 Team: Engine Debug
+
+    Get all tasks with [Task][Level:6-3][Engine][Prio:1][not solved]
+    Debug and fix Engine errors.
+    when its done, send it back with [solved task]
+
+6-4 Team: Art Debug
+
+    Get all tasks with [Task][Level:6-4][Art][Prio:1][not solved]
+    Debug and fix Art errors.
+    when its done, send it back with [solved task]
+
+6-5 Team: Quality Assist Debug
+
+    Get all tasks with [Task][Level:6-5][Quality Assist][Prio:1][not solved]
+    Assist in debugging and fixing errors.
+    when its done, send it back with [solved task]
+
+7 Finalizer
+
+    Get all tasks with [Task][Level:7-*][*TEAM*][Prio:*][not solved]
+    Finalize the project.
+    when its done, send it back with [solved task]
+
+7-1 Team: Documentation
+
+    Get all tasks with [Task][Level:7-1][Documentation][Prio:1][not solved]
+    Complete the project documentation.
+    when its done, send it back with [solved task]
+
+7-2 Team: Manual and Requirements
+
+    Get all tasks with [Task][Level:7-2][Manual and Requirements][Prio:1][not solved]
+    Complete the project manual and requirements.
+    when its done, send it back with [solved task]
+
+
+
 Contributing
 
 Please read CONTRIBUTING.md for details on contributing to this project.
