@@ -10,7 +10,7 @@ Next level Autogen with teams, tools and training to reach your goals.
 - Simply write any instruction in any language in free text to get started.
 
 
-## Developper 
+## Developer 
 
 ## Introduction
 
