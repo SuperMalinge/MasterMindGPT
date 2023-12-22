@@ -1,9 +1,7 @@
 # MasterMindGPT
 
 Next level Autogen with teams, tools and training to reach your goals.
-- make applications
-- go online and make orders
-- produce multimedia assets for business.
+- create applications or Games 2D/3D
 
 # Installation
 
