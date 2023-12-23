@@ -20,6 +20,7 @@ It will gather information from the web and from a database.
 add ```[question]``` to the board and ask the user for additional information
 The information will be used to plan out: Frontend,Backend,Art,Engine,Logic etc.
 Basic plan: Tasks and subtasks will be build out of this.
+<img src="task1.png" width="128"/>
 ![Screenshot](task1.png)
 <p align="center">
   <img src="task1.png" width="350" title="hover text">
