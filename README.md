@@ -1,3 +1,7 @@
+# Important
+
+This repo is currently only a draft. Right now im testing the MasterMindGPT with CrewAI for agent support. It seems to fit better than AutoGen
+
 # MasterMindGPT
 
 Next level Autogen with teams, tools and training to reach your goals.
