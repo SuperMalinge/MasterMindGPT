@@ -1,6 +1,11 @@
 # Important
 
-This repo is currently only a draft. Right now im testing the MasterMindGPT with CrewAI for agent support. It seems to fit better than AutoGen
+1.This repo is currently only a draft. Right now im testing the MasterMindGPT with CrewAI for agent support. It seems to fit better than AutoGen
+
+2. The Current verision is using Python 3.10 and also using CrewAI. You will NEED to install both in an extra enviroment. Also i have altered CrewAI to give
+the Chat into the Main window. This is not in this repo implemented.
+
+the Next step is that the CEO Agent is going to send the prompt to the Planner Agent and this has to be done via the Job board. < not working right now
 
 # MasterMindGPT
 
