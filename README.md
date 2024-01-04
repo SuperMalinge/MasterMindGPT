@@ -7,6 +7,9 @@ the Chat into the Main window. This is not in this repo implemented.
 
 the Next step is that the CEO Agent is going to send the prompt to the Planner Agent and this has to be done via the Job board. < not working right now
 
+![mastermind1t](https://github.com/SuperMalinge/MasterMindGPT/assets/64928345/b790f47f-a686-483d-a214-8002ad503e16)
+
+
 # MasterMindGPT
 
 Next level Autogen with teams, tools and training to reach your goals.
