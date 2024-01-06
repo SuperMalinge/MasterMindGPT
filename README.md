@@ -51,7 +51,10 @@ adding tasks like these:
 - processing-> add tasks and subtasks for the teams to a Board > priorizing on what needs to be done first
 Any ```[Task][Level:1][Plan][Prio:1][not solved]``` remaining? assign tasks! and make them [Task][Level:2]
 
-Second Team-Level 2 Orchestra -: Checks on all tasks. Do we have the resources to solve the tasks?
+
+## The Orchestra: Level 2 Team
+
+Next, our orchestra - the Level 2 Team - checks on all tasks. Do we have the resources to solve the tasks? Does the AI understand what needs to be done? Is anything missing? All teams are assigned to the tasks, and the taskboard is updated accordingly.
 Get all ```[Task][Level:2]```
 Does the AI understand on what needs to be done?
 Is anything missing?
@@ -63,7 +66,9 @@ Taskboard looks like this now:
 ...
 
 ```
-Teams will look at the taskboard and get the tasks:
+## The Sections: Teams 3-1 to 3-4
+
+Now, the sections of our orchestra - Teams 3-1 to 3-4 - look at the taskboard and get to work. Each team builds logic, searches for code, applies it, and when done, sends it back marked as a `[solved task]`.
 
 #### 3-1 Team: Frontend
 1. Get all tasks with ```[Task][Level:2-1][Frontend][Prio:1][not solved]```
@@ -96,8 +101,10 @@ Taskboard looks like this now:
 
 ```
 
-### Quality check Phase
-4 Team Quality ONE
+## The Finale: Quality Check Phase
+
+In the finale, our Quality Team steps in. They check all solved tasks for logic, quality, and completeness. They ask the user if the result is satisfying, and if not, they reprocess it or let the user provide the answer. The whole plan is saved and rated for quality, and all tasks are elevated to Level 4.
+
 1. Get all ```[Task][Level:3-*][solved]``` and check them if they are logical, good quality, not just a few words / code, no place holders
 2. can we make it complete? does the chain from the first to the last make sense?
 3. ask user if this is statisfying, if not try to reprocess it of let the user give the answer:
@@ -112,7 +119,10 @@ Taskboard looks like this now:
 
 ```
 
-#### 4-1 Team: Frontend
+## The Encore: Teams 4-1 to 4-4
+
+In the encore, Teams 4-1 to 4-4 take the stage. They get all tasks assigned to them, build the complete Frontend, Backend, Art, and Engine, search and look for code, compile it, and when done, send it back marked as a `[solved task]`.
+
 1. Get all tasks with ```[Task][Level:4-1][Frontend][not solved]```
 2. Build the complete Frontend.
 3. Search and Look for code and compile it
