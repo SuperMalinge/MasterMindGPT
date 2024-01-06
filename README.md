@@ -17,6 +17,7 @@ Next level Autogen with teams, tools and training to reach your goals.
 
 # Installation
 - create a new enviroment with python 3.10
+- pip install crewai - for the crewai library
 
 # How To Use
 
