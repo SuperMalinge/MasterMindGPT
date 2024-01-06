@@ -16,6 +16,7 @@ Next level Autogen with teams, tools and training to reach your goals.
 - create applications or Games 2D/3D
 
 # Installation
+- create a new enviroment with python 3.10
 
 # How To Use
 
