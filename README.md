@@ -26,14 +26,15 @@ Next level Autogen with teams, tools and training to reach your goals.
 ## Developer 
 Discord: SuperMalinge
 
-## Introduction
+# MasterMindGPT: A Symphony of Tasks
 
-First Team - Planners-: Planning, task making and gathering information.
-Its purpose is to gather enough information from the user to make a complete plan on how the app should look like.
-It will gather information from the web and from a database.
-add ```[question]``` to the board and ask the user for additional information
-The information will be used to plan out: Frontend,Backend,Art,Engine,Logic etc.
-Basic plan: Tasks and subtasks will be build out of this.
+Imagine a symphony, where each instrument plays its part to create a harmonious melody. That's what MasterMindGPT is all about - a harmonious collaboration of tasks and teams working together to create something extraordinary.
+
+## The Maestro: Adding Tasks
+Our journey begins with the addition of tasks like these:
+
+**First Team - Planners**: The role of the planners is to plan, create tasks, and gather information. Their purpose is to collect enough information from the user to create a comprehensive plan for how the app should look. They will gather information from the web and from a database. They will add `[question]` to the board and ask the user for additional information. The information will be used to plan out various aspects such as Frontend, Backend, Art, Engine, Logic, etc. The basic plan will consist of tasks and subtasks built from this information.
+
 
 ![task1](https://github.com/SuperMalinge/MasterMindGPT/assets/64928345/df9965b5-6512-4b48-8efd-92d5c89234c8)
 
