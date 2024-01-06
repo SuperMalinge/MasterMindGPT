@@ -24,6 +24,7 @@ Next level Autogen with teams, tools and training to reach your goals.
 
 
 ## Developer 
+Discord: SuperMalinge
 
 ## Introduction
 
