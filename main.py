@@ -1,12 +1,41 @@
 import tkinter as tk
 from anytree import Node, RenderTree
 from tkinter.ttk import Treeview
-from crewai import Crew
+from autogen.agentchat.contrib.retrieve_assistant_agent import RetrieveAssistantAgent
+from autogen.agentchat.contrib.retrieve_user_proxy_agent import RetrieveUserProxyAgent
+import autogen
+import json
 
 import threading
+# "model": "mistral-instruct-7b",
+from autogen import oai
 
-from companyagents import CompanyAgents
-from planning_tasks import PlanningTasks
+llm_config = [
+    {
+        "model": "mistral-instruct-7b",
+        "api_base": "http://127.0.0.1:5001/v1",
+        "api_type": "open_ai",
+        "api_key": "sk-111111111111111111111111111111111111111111111111",
+    }
+]
+
+# Write the configuration to a JSON file
+with open('config.json', 'w') as f:
+    json.dump(llm_config, f)
+
+config_list = autogen.config_list_from_json(
+    env_or_file='config.json',
+    file_location=".",
+    filter_dict={
+        "model": {
+            "mistral-instruct-7b",            
+        }
+    },
+)
+
+assert len(config_list) > 0
+print("models to use: ", [config_list[i]["model"] for i in range(len(config_list))])
+
 
 #use constants for fixed strings
 question = "question"
@@ -108,9 +137,6 @@ class TaskBoardGUI:
         self.send_button.pack()
         self.send_button.place(x=100, y=350)
 
-        # Get the list of agents
-        self.agents = CompanyAgents().get_agents()
-
         # Create the Listbox widget for agents
         self.agent_listbox_label = tk.Label(root, text="Agent List")
         self.agent_listbox_label.pack()
@@ -120,10 +146,13 @@ class TaskBoardGUI:
         self.agent_listbox.pack()
         self.agent_listbox.place(x=450, y=200)
 
+        # Initialize RAG agents.
+        self.initialize_rag_agents()
+
         # Populate the agent listbox
-    def populate_agent_listbox(self):
-        for agent in self.agents:
-            self.agent_listbox.insert(tk.END, agent)        
+    #def populate_agent_listbox(self):
+    #    for agent in self.agents:
+    #        self.agent_listbox.insert(tk.END, agent)        
 
     def log_to_widget(self, message):
         self.chat_output.insert(tk.END, f"{message}\n")       
@@ -382,33 +411,57 @@ class TaskBoardGUI:
             tk.messagebox.showerror("Error", "Please select a Job to delete")
 
     def send_chat_input(self):
+        # Get the input from the chat box
         chat_input = self.chat_input.get()
-        if chat_input:
+        
+        # Check for non-empty string
+        if chat_input.strip():
             self.chat_output.insert(tk.END, f"User: {chat_input}\n")
             self.chat_output.see(tk.END)
             self.chat_input.delete(0, tk.END)
-
-            # Run the long-running task in a separate thread
+            # Here, we pass the chat_input directly because it was already captured above
             threading.Thread(target=self.start_chat_flow, args=(chat_input,)).start()
+        else:
+            # Optionally, let the user know they need to enter a message
+            tk.messagebox.showerror("Error", "Please enter a message.")
 
-    def start_chat_flow(self, tasks):
-        agents = CompanyAgents()
-        tasks = PlanningTasks()
-
-        CEO_Agent = agents.CEOAgent()
-        Game_planner = agents.GamePlanningAgent()
-
-        prompt = self.chat_input.get()
-        task1 = tasks.delegate_team(CEO_Agent, self.company, prompt)
-        
-        self.crew = Crew(
-            log_handler=self.log_to_widget,
-            agents=[CEO_Agent, Game_planner],
-            tasks=[task1],
-            verbose=True
+    def initialize_rag_agents(self):
+        # Configure RAG agents
+        self.retrieve_assistant_agent = RetrieveAssistantAgent(
+            name="assistant",
+            system_message="You are a helpful assistant.",
+            llm_config=llm_config,  # llm_config would be your actual LLM configuration.
         )
-        result = self.crew.kickoff()
-        return result  
+
+        docs_directory = "D:\Pythonprojects\Projects\MasterMindGITHUBAUTOGEN"  # Update this with the document collection path.
+        self.retrieve_user_proxy_agent = RetrieveUserProxyAgent(
+            name="ragproxyagent",
+            retrieve_config={
+                "task": "qa",
+                "docs_path": docs_directory,
+            },
+        )
+
+    def start_chat_flow(self, chat_input):
+        # Reset the agents at the beginning of a chat flow
+        self.retrieve_assistant_agent.reset()
+        
+        # Initiating the chat with a question/problem statement
+        self.retrieve_user_proxy_agent.initiate_chat(
+            self.retrieve_assistant_agent,
+            problem=chat_input
+        )
+        
+        # This block represents processing the chat output.
+        # Extract the responses from the agents and display them on the GUI, this must be adapted to your case.
+        try:
+            messages = self.retrieve_user_proxy_agent.chat_messages
+            # Process and display messages in GUI
+            for message in messages:
+                self.log_to_widget(message['content'])
+        except Exception as e:
+            # Handle exceptions and errors
+            self.log_to_widget(str(e))
 
 if __name__ == "__main__":
     root = tk.Tk()
