@@ -1,22 +1,22 @@
 # Important
 
-1. This repo is currently only a draft. Right now, I'm testing MasterMindGPT with CrewAI for agent support. It seems to fit better than AutoGen.
+1. This repo is currently only a draft. After testing MasterMindGPT with CrewAI for agent support, I've decided to switch to AutoGen from Microsoft. Unfortunately, CrewAI did not work as expected.
 
-2. The current version is using Python 3.10 and also using CrewAI. You will NEED to install both in a separate environment. Also, I have altered CrewAI to display the chat in the main window. This is not implemented in this repo.
+2. The current version is now using AutoGen. You will NEED to install it in a separate environment. 
 
 The next step is that the CEO Agent is going to send the prompt to the Planner Agent, and this has to be done via the Job board. This is not working right now.
 
-![mastermind1t](https://github.com/SuperMalinge/MasterMindGPT/assets/64928345/b790f47f-a686-483d-a214-8002ad503e16)
+!mastermind1t
 
 
 # MasterMindGPT
 
-Next level Autogen with teams, tools and training to reach your goals.
+Next level AutoGen with teams, tools and training to reach your goals.
 - create applications or Games 2D/3D
 
 # Installation
 - create a new environment with python 3.10
-- pip install crewai - for the crewai library
+- pip install autogen - for the AutoGen library
 
 # How To Use
 
