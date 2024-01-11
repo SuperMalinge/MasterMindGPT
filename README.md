@@ -1,3 +1,8 @@
+# Update
+
+I'm excited to announce that the code has been updated and the functionality to add jobs to the job board is now working as expected. The next step in our journey is to set up the agents correctly. Stay tuned for more updates!
+
+
 # Important
 
 1. This repo is currently only a draft. After testing MasterMindGPT with CrewAI for agent support, I've decided to switch to AutoGen from Microsoft. Unfortunately, CrewAI did not work as expected.
