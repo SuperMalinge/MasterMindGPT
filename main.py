@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 from anytree import Node, RenderTree
 from tkinter.ttk import Treeview
 from autogen.agentchat.contrib.retrieve_assistant_agent import RetrieveAssistantAgent
@@ -6,13 +7,17 @@ from autogen.agentchat.contrib.retrieve_user_proxy_agent import RetrieveUserProx
 import autogen
 import json
 
+
 import threading
 # "model": "mistral-instruct-7b",
-from autogen import oai
+
+from openai import OpenAI
+client = OpenAI(base_url="http://localhost:5001/v1", api_key="not-needed")
+
 
 llm_config = [
     {
-        "model": "mistral-instruct-7b",
+        "model": "mistralai_mistral-7b-instruct-v0.2",
         "api_base": "http://127.0.0.1:5001/v1",
         "api_type": "open_ai",
         "api_key": "sk-111111111111111111111111111111111111111111111111",
@@ -27,9 +32,8 @@ config_list = autogen.config_list_from_json(
     env_or_file='config.json',
     file_location=".",
     filter_dict={
-        "model": {
-            "mistral-instruct-7b",            
-        }
+        "model": "mistralai_mistral-7b-instruct-v0.2",       
+        "api_base": "http://127.0.0.1:5001/v1",               
     },
 )
 
@@ -60,8 +64,14 @@ class TaskBoardGUI:
         self.root = root
         self.root.title("MasterMindGPT Job Board")
         self.Job = []
-        self.Jobs = []
+        self.Jobs = []                
+        self.llm_config = llm_config  # This assumes llm_config is passed in during instantiation
 
+        # Create attributes for Job-related widgets
+        self.retrieve_assistant_agent = None
+        self.retrieve_user_proxy_agent = None
+        self.ceo_boss = None
+        self.agents = None                 
         self.root.geometry("1100x500")
         self.question_window = None 
         # Create attributes for question-related widgets
@@ -75,17 +85,25 @@ class TaskBoardGUI:
         self.company = company        
 
         # Button to add Job
-        self.add_Job_button = tk.Button(root, text="Add Job", command=self.open_Job_window)
+        # Display the Job list 
+        self.Job_listbox = tk.Listbox(root, width=80)  # Adjust the width here
+        self.Job_listbox.pack()
+        self.Job_listbox.place(x=450, y=30)
+
+        self.job_management_system = JobManagementSystem(root,self.Job_listbox, self)
+        
+        self.add_Job_button = tk.Button(root, text="Add Job", command=self.job_management_system.open_Job_window)
         self.add_Job_button.pack()
         self.add_Job_button.place(x=450, y=0)
 
         # Button to delete Job
-        self.delete_Job_button = tk.Button(root, text="Delete Job", command=self.delete_Job)
+        self.delete_Job_button = tk.Button(root, text="Delete Job", command=self.job_management_system.delete_Job)
         self.delete_Job_button.pack()
         self.delete_Job_button.place(x=510, y=0)
 
-        # Button to add questions        
-        self.add_question_button = tk.Button(root, text="Add Question", command=self.open_question_window)
+        # Button to add questions
+        self.add_question_button = tk.Button(root, text="Add Question", command=self.add_question_wrapper)       
+        
         self.add_question_button.pack()
         self.add_question_button.place(x=580, y=0)
 
@@ -104,7 +122,7 @@ class TaskBoardGUI:
         self.get_current_workflow_button.pack()
         self.get_current_workflow_button.place(x=800, y=0)
 
-        self.get_questions_button = tk.Button(root, text="Get Questions", command=self.open_question_window)
+        self.get_questions_button = tk.Button(root, text="Get Questions", command=self.job_management_system.open_question_window)
         self.get_questions_button.pack()
         self.get_questions_button.place(x=930, y=0)
 
@@ -118,14 +136,10 @@ class TaskBoardGUI:
         self.chat_output.pack(side=tk.LEFT)    
         self.chat_output.place(x=100, y=0)    
 
-        # Display the Job list 
-        self.Job_listbox = tk.Listbox(root, width=80)  # Adjust the width here
-        self.Job_listbox.pack()
-        self.Job_listbox.place(x=450, y=30)
         #task list label placed below the Job list
         self.task_list_label = tk.Label(root, text="Job List")
         self.task_list_label.pack()
-        self.task_list_label.place(x=450, y=195) 
+        self.task_list_label.place(x=450, y=195)        
      
         # chat input
         self.chat_input = tk.Entry(root, width=80)  # Entry widget for chat input. Prompt goes here
@@ -149,10 +163,25 @@ class TaskBoardGUI:
         # Initialize RAG agents.
         self.initialize_rag_agents()
 
-        # Populate the agent listbox
-    #def populate_agent_listbox(self):
-    #    for agent in self.agents:
-    #        self.agent_listbox.insert(tk.END, agent)        
+    def get_current_workflow(self):
+        # If tasks is supposed to come from somewhere else in your class, update this method to use that.
+        if hasattr(self, 'tasks'):
+            self.chat_output.insert(tk.END, f"Current Workflow: {self.tasks}")
+        else:
+            print("The 'tasks' attribute is not defined.")
+            # Handle the situation appropriately, maybe by setting self.tasks = [] or providing an error message.
+
+    def add_question_wrapper(self):
+        # You should determine how to properly create or get a reference to a question_window
+        # Perhaps it's created here, or maybe it's an existing part of your GUI
+        question_window = self.create_or_get_question_window()
+        self.job_management_system.add_question(question_window)
+
+    def create_or_get_question_window(self):
+        # Create a new Toplevel window or return an existing reference
+        # Dummy function for illustration. Replace with actual window creation code.
+        return tk.Toplevel(self.root)
+
 
     def log_to_widget(self, message):
         self.chat_output.insert(tk.END, f"{message}\n")       
@@ -182,6 +211,7 @@ class TaskBoardGUI:
         self.chat_output.insert(tk.END, f"Current Workflow: {self.tasks}")
         #the current workflow will be gathered from all teams and then shown in the window
         pass
+
     def get_structure(self):
         plan_window = tk.Toplevel(self.root)
         plan_window.title("Structure")
@@ -245,6 +275,296 @@ class TaskBoardGUI:
         # The plan will be gathered from the planner team and then shown in the window
         # A prompt needs to be set first with the start procedure
 
+    def refresh_agents_status(self):
+        # This method will fetch status from CEO and update the GUI
+        task_statuses = self.ceo_boss.report_tasks_status()
+        # (Here you'll write code to update some part of your GUI with the statuses)
+        # (For example, you can update the Job listbox with the status of each Job)
+        # (You can also update the agent listbox with the status of each agent)
+        # (You can also update the chat output with the status of each agent)
+        # (You can also update the plan output with the status of each agent)
+        # (You can also update the structure output with the status of each agent)
+        # (You can also update the current workflow output with the status of each agent)
+        # (You can also update the question output with the status of each agent)
+        # (You can also update the question count output with the status of each agent)
+
+    def get_plan_output(self, plan_window):
+        # Add logic to get and display the plan output
+        pass
+ 
+    def send_chat_input(self):
+        chat_input = self.chat_input.get()
+        if chat_input:            
+            threading.Thread(target=self.initiate_workflow, args=(chat_input,)).start()
+        else:
+            tk.messagebox.showerror("Error", "Please enter a Job to initiate the workflow")
+         
+    def initiate_workflow(self, chat_input):
+        # Call any preprocessing required here
+        processed_input = self.preprocess_chat_input(chat_input)
+        task_board_gui.retrieve_assistant_agent_planner.reset()
+        
+        self.log_to_widget(f"Initiated workflow with input: {processed_input}")
+        # Simulate sending a message to the CEO with a directive to start the workflow  
+        task_board_gui.retrieve_user_proxy_agent.initiate_chat(task_board_gui.retrieve_assistant_agent_planner, problem=processed_input)    
+               
+        # Assuming 'processed_input' is the input for the Planner agent
+        job = {
+            "Team": "1 Planner",
+            "Job": processed_input,
+            "Status": "unsolved",
+            "SubJob": None
+        }
+
+        # Simulate sending a message to the CEO who will then delegate it
+        self.ceo_boss.delegate_task(job)
+        self.Jobs.append(job)
+        self.update_Job_list()
+        self.log_to_widget(f"Delegated to Planner: {processed_input}")
+
+    # ..
+    def process_chat_input(self, chat_input):
+        # This function is run in a new thread
+        processed_input = self.preprocess_chat_input(chat_input)
+
+        # Assuming that 'processed_input' is ready to be sent to the Planner agent
+        job = {
+            "Team": "1 Planner",
+            "Job": processed_input,
+            "Status": "unsolved",
+            "SubJob": None
+        }
+    
+        # Simulate sending a message to the CEO who will then delegate it
+        self.ceo_boss.delegate_task(job)
+        self.Jobs.append(job)
+        self.update_Job_list()
+        self.log_to_widget(f"Delegated to Planner: {processed_input}")
+
+    def preprocess_chat_input(self, chat_input):
+        # In a real scenario, you might have actual preprocessing like NLU or running an API call
+        # For our purpose, let's assume the preprocessed output is the input itself
+        return chat_input
+
+    def initialize_rag_agents(self):
+        print("Initializing RAG agents with llm_config:", self.llm_config)
+        docs_directory = r"D:\Pythonprojects\Projects\MasterMindGITHUBAUTOGEN"
+
+        # Initialize your agents here and add to CEO
+        self.ceo_boss = CEO()
+        planner_agent = Agent("1 Planner", "Planner")
+        orchestra_agent = Agent("2 Orchestra", "Orchestra")
+
+        # Add agents to CEO
+        self.ceo_boss.add_agent(planner_agent)
+        self.ceo_boss.add_agent(orchestra_agent)
+
+        try:
+            # Configure RAG assistant agent for Planner
+            self.retrieve_assistant_agent_planner = RetrieveAssistantAgent(
+                name="Planner Agent",
+                system_message="You are a helpful assistant.",
+                llm_config=self.llm_config,
+            )
+            print("Planner Agent (RetrieveAssistantAgent) initialized successfully.")
+
+            # Configure RAG assistant agent for Orchestra
+            self.retrieve_assistant_agent_orchestra = RetrieveAssistantAgent(
+                name="Orchestra Agent",
+                system_message="You orchestrate the workflow.",
+                llm_config=self.llm_config,
+            )
+            print("Orchestra Agent (RetrieveAssistantAgent) initialized successfully.")
+
+            # Configure RAG user proxy agent
+            self.retrieve_user_proxy_agent = RetrieveUserProxyAgent(
+                name="CEO Proxy Agent",
+                retrieve_config={
+                    "task": "qa",
+                    "docs_path": docs_directory,
+                },
+            )
+            print("CEO Proxy Agent (RetrieveUserProxyAgent) initialized successfully.")
+
+        except Exception as e:
+            print("Error during RAG agents initialization:", e)
+            raise
+
+        # Store the agents in the class attributes if needed elsewhere in the class
+        self.planner_agent = planner_agent
+        self.orchestra_agent = orchestra_agent
+
+    def start_chat_flow(self, chat_input):
+        # Reset the agents at the beginning of a chat flow
+        self.retrieve_assistant_agent.reset()
+
+        
+        # Initiating the chat with a question/problem statement
+        self.retrieve_user_proxy_agent.initiate_chat(
+            self.retrieve_assistant_agent,
+            problem=chat_input
+        )
+        
+        # This block represents processing the chat output.
+        # Extract the responses from the agents and display them on the GUI, this must be adapted to your case.
+        try:
+            messages = self.retrieve_user_proxy_agent.chat_messages
+            # Process and display messages in GUI
+            for message in messages:
+                self.log_to_widget(message['content'])
+        except Exception as e:
+            # Handle exceptions and errors
+            self.log_to_widget(str(e))
+
+
+class Agent:
+    def __init__(self, name, team):
+        self.name = name
+        self.team = team
+        self.tasks = []
+
+    def handle_task(self, task):
+        self.tasks.append(task)
+        print(f"{self.name}: received task -> {task}")
+
+    def report_status(self):
+        # This could return a summary of tasks, their status or any other relevant information
+        return {
+            "total_tasks": len(self.tasks),
+            "current_tasks": [task['Job'] for task in self.tasks]
+        }
+
+class CEO:
+    def __init__(self):
+        self.agents = {}
+
+    def initiate_workflow(self, message):
+        # Assuming the message is the cue to start working on tasks
+        # CEO checks the tasks assigned to the Planner agent
+        if message == "start the workflow":
+            planner_tasks = [task for task in self.Jobs if task['Team'] == '1 Planner']
+            # Pass the relevant tasks to the Planner agent
+            for task in planner_tasks:
+                self.delegate_task(task)
+
+    def add_agent(self, agent):
+        self.agents[agent.name] = agent
+
+    def delegate_task(self, task):
+        # Find the right agent to delegate the task
+        # Here we'd use a method to process the task if needed.
+        # As an example, we're assuming the task goes directly to the Planner
+        agent = self.agents.get("1 Planner")
+        if agent:
+            agent.handle_task(task)
+            self.report_task_delegation(task)  # Log the job delegation
+        else:
+            print(f"No matching agent found for team {task['Team']}.")
+
+    def report_task_delegation(self, task):
+        # Report task delegation to the GUI.
+        # This needs proper handling to show on GUI
+        print(f"Delegated task '{task['Job']}' to {task['Team']}")
+
+    def report_tasks_status(self):
+        status_report = {}
+        for agent_name, agent in self.agents.items():
+            status_report[agent_name] = agent.report_status()
+        return status_report
+
+class JobManagementSystem:
+    def __init__(self, root, Job_listbox, task_board_gui):
+        self.root = root
+        self.Job_listbox = Job_listbox
+        self.Jobs = []
+        self.selected_Job = None
+        self.selected_team = None
+        self.selected_status = None
+        self.selected_subjob = None
+        self.selected_question = None
+        self.selected_ask_question = None
+        self.selected_suggestion_1 = None
+        self.selected_suggestion_2 = None
+        self.selected_own_suggestion = None
+        self.selected_scratch_question = None
+        self.selected_task = None
+        self.selected_task_description = None
+        self.selected_status = None
+        self.selected_subtask = None
+        self.selected_current_workflow = None
+        self.selected_question_count = None
+        self.task_board_gui = task_board_gui
+
+
+    def update_Job_list(self):
+        self.Job_listbox.delete(0, tk.END)
+        for Job in self.Jobs:
+            if all(key in Job for key in ['Team', 'Question', 'Ask Question', 'Suggestion 1', 'Suggestion 2', 'Own Suggestion', 'Scratch Question']):
+                team = Job.get('Team', '')
+                question = Job.get('Question', '')
+                ask_question = Job.get('Ask Question', '')
+                suggestion1 = Job.get('Suggestion 1', '')
+                suggestion2 = Job.get('Suggestion 2', '')
+                own_suggestion = Job.get('Own Suggestion', '')
+                scratch_question = Job.get('Scratch Question', '')
+
+                self.Job_listbox.insert(tk.END, f"Team: {team}, Question: {question}, Ask Question: {ask_question}, Suggestion 1: {suggestion1}, Suggestion 2: {suggestion2}, Own Suggestion: {own_suggestion}, Scratch Question: {scratch_question}")
+            else:
+                team = Job.get('Team', '')
+                Job_desc = Job.get('Job', '')
+                status = Job.get('Status', '')
+                subJob = Job.get('SubJob', '')
+                self.Job_listbox.insert(tk.END, f" Team: {team}, Job: {Job_desc}, Status: {status}, SubJob: {subJob}")
+
+
+    def update_Job_count(self):
+        Job_count = len(self.Jobs)
+        self.add_Job_button.config(text=f"Add Job ({Job_count})")
+
+    def delete_Job(self):
+        try:
+            index = self.Job_listbox.curselection()[0]
+            self.Job_listbox.delete(index)
+            del self.Jobs[index]
+            self.update_Job_list()
+        except IndexError:
+            tk.messagebox.showerror("Error", "Please select a Job")
+
+    def add_question(self, question_window):
+
+        question_label = tk.Label(question_window, text="Question:")
+        question_label.pack()
+        self.question_entry = tk.Entry(question_window)
+        self.question_entry.pack()
+
+        ask_question_label = tk.Label(question_window, text="Ask Question:")
+        ask_question_label.pack()
+        self.ask_question_entry = tk.Entry(question_window)
+        self.ask_question_entry.pack()
+
+        suggestion_1_label = tk.Label(question_window, text="Suggestion 1:")
+        suggestion_1_label.pack()
+        self.suggestion_1_entry = tk.Entry(question_window)
+        self.suggestion_1_entry.pack()
+
+        suggestion_2_label = tk.Label(question_window, text="Suggestion 2:")
+        suggestion_2_label.pack()
+        self.suggestion_2_entry = tk.Entry(question_window)
+        self.suggestion_2_entry.pack()
+
+        own_suggestion_label = tk.Label(question_window, text="Own Suggestion:")
+        own_suggestion_label.pack()
+        self.own_suggestion_entry = tk.Entry(question_window)
+        self.own_suggestion_entry.pack()
+
+        scratch_question_label = tk.Label(question_window, text="Scratch Question:")
+        scratch_question_label.pack()
+        self.scratch_question_entry = tk.Entry(question_window)
+        self.scratch_question_entry.pack()
+
+        add_question_button = tk.Button(question_window, text="Add Question", command=lambda: self.add_question(question_window))
+        add_question_button.pack()
+    
     def open_Job_window(self):
         job_window = tk.Toplevel(self.root)
         team_label = tk.Label(job_window, text="Team:")
@@ -304,164 +624,25 @@ class TaskBoardGUI:
                 "SubJob": subjob
             })
             self.update_Job_list()
-            self.chat_output.insert(tk.END, f"A new Job has been added: Team: {team}, Job: {job_description}, Status: {status}, SubJob: {subjob}\n")  # Insert the Job into the chat output
+            self.task_board_gui.chat_output.insert(tk.END, f"A new Job has been added: Team: {team}, Job: {job_description}, Status: {status}, SubJob: {subjob}\n")  # Insert the Job into the chat outpu            
             job_window.destroy()
         else:
             tk.messagebox.showerror("Error", "Please fill in all fields")
             #Example on how to add a Job: self.Jobs.append({"Team": "1 Planner", "Job": "Plan a game from a prompt given by the CEO", "Status": "not solved", "SubJob": "Plan a game from a prompt given by the CEO"})
 
-    def get_plan_output(self, plan_window):
-        # Add logic to get and display the plan output
-        pass
-
     def open_question_window(self):
         question_window = tk.Toplevel(self.root)
+        question_window.title("Questions")
+        question_window.geometry("500x700")
+        question_label = tk.Label(question_window, text="Questions:")
+        question_label.pack()
+        question_entry = tk.Entry(question_window)
+        question_entry.pack()
+        question_button = tk.Button(question_window, text="Get Questions", command=lambda: self.get_questions_output(question_window))
+        question_button.pack()
 
-        teams = ["1 Planner", "2 Orchestra", "2-1 Plan Build", "2-2 Structure Build " , "2-3 Engine Choose or Build", "2-4 Art and Prompt Build","2-5 Quality Assist Orchestra ", "3 Task Maker Logic ", "3-1 GUI Logic ", "3-2 Backend Logic", "3-3 Engine Logic", "3-4 Preview Art","3-5 Quality Assist Logic", "4 Task Manager Code", "4-1 GUI Code", "4-2 Backend Code", "4-3 Engine Code", "4-4 Art Refiner","4-5 Quality Assist Code", "5 Reviewer", "5-1 GUI Review", "5-2 Backend Review", "5-3 Engine Review", "5-4 Art implemention","5-5 Quality Assist Reviewer", "6 Debug and Error", "6-1 GUI Debug", "6-2 Backend Debug", "6-3 Engine Debug", "6-4 Art Debug","6-5 Quality Assist Debug", "7 Finalizer", "7-1 Documentation", "7-2 Manual and Requirements",]
-        self.selected_team = tk.StringVar(question_window)
-        self.selected_team.set(teams[0])  # Default value
-        self.team_label = tk.Label(question_window, text="Team:")
-        self.team_entry = tk.OptionMenu(question_window, self.selected_team, *teams)
-        self.team_entry.pack()
 
-        self.question_label = tk.Label(question_window, text="Question:")
-        self.question_label.pack()
-        self.question_label_entry = tk.Entry(question_window)
-        self.question_label_entry.pack()        
 
-        self.ask_question_label = tk.Label(question_window, text="Ask Question:")
-        self.ask_question_label.pack()
-        self.ask_question_label_entry = tk.Entry(question_window)
-        self.ask_question_label_entry.pack()
-
-        self.suggestion_1_label = tk.Label(question_window, text="Suggestion 1:")
-        self.suggestion_1_label.pack()
-        self.suggestion_1_label_entry = tk.Entry(question_window)
-        self.suggestion_1_label_entry.pack()
-
-        self.suggestion_2_label = tk.Label(question_window, text="Suggestion 2:")
-        self.suggestion_2_label.pack()
-        self.suggestion_2_label_entry = tk.Entry(question_window)
-        self.suggestion_2_label_entry.pack()
-
-        self.own_suggestion_label = tk.Label(question_window, text="Own Suggestion:")
-        self.own_suggestion_label.pack()
-        self.own_suggestion_label_entry = tk.Entry(question_window)
-        self.own_suggestion_label_entry.pack()
-
-        self.scratch_question_label = tk.Label(question_window, text="Scratch Question:")
-        self.scratch_question_label.pack()
-        self.scratch_question_label_entry = tk.Entry(question_window)
-        self.scratch_question_label_entry.pack()
-
-        self.add_question_button = tk.Button(question_window, text="Add Question", command=lambda: self.add_question(question_window))
-        self.add_question_button.pack()        
-
-    def add_question(self, question_window):
-        team = self.selected_team.get()
-        question = self.question_label_entry.get()
-        ask_question = self.ask_question_label_entry.get()
-        suggestion1 = self.suggestion_1_label_entry.get()
-        suggestion2 = self.suggestion_2_label_entry.get()
-        own_suggestion = self.own_suggestion_label_entry.get()
-        scratch_question = self.scratch_question_label_entry.get()
-            
-        if team and question and ask_question and suggestion1 and suggestion2 and own_suggestion and scratch_question:
-            self.tasks.append({
-                "Team": team,
-                "Question": question,
-                "Ask Question": ask_question,
-                "Suggestion 1": suggestion1,
-                "Suggestion 2": suggestion2,
-                "Own Suggestion": own_suggestion,
-                "Scratch Question": scratch_question
-            })
-            self.chat_output.insert(tk.END, f"A new question has been added: Team: {team}, Question: {question}, Ask Question: {ask_question}, Suggestion 1: {suggestion1}, Suggestion 2: {suggestion2}, Own Suggestion: {own_suggestion}, Scratch Question: {scratch_question}\n")
-            self.update_Job_list()
-            question_window.destroy()
-        else:
-            tk.messagebox.showerror("Error", "Please fill in all fields")
-
-    def update_Job_list(self):
-        self.Job_listbox.delete(0, tk.END)
-        for Job in self.Jobs:
-            if all(key in Job for key in ['Team', 'Question', 'Ask Question', 'Suggestion 1', 'Suggestion 2', 'Own Suggestion', 'Scratch Question']):
-                team = Job.get('Team', '')
-                question = Job.get('Question', '')
-                ask_question = Job.get('Ask Question', '')
-                suggestion1 = Job.get('Suggestion 1', '')
-                suggestion2 = Job.get('Suggestion 2', '')
-                own_suggestion = Job.get('Own Suggestion', '')
-                scratch_question = Job.get('Scratch Question', '')
-
-                self.Job_listbox.insert(tk.END, f"Team: {team}, Question: {question}, Ask Question: {ask_question}, Suggestion 1: {suggestion1}, Suggestion 2: {suggestion2}, Own Suggestion: {own_suggestion}, Scratch Question: {scratch_question}")
-            else:
-                team = Job.get('Team', '')
-                Job_desc = Job.get('Job', '')
-                status = Job.get('Status', '')
-                subJob = Job.get('SubJob', '')
-                self.Job_listbox.insert(tk.END, f" Team: {team}, Job: {Job_desc}, Status: {status}, SubJob: {subJob}")
-
-    def delete_Job(self):
-        selected_index = self.Job_listbox.curselection()
-        if selected_index:
-            self.Jobs.pop(selected_index[0])
-            self.update_Job_list()
-        else:
-            tk.messagebox.showerror("Error", "Please select a Job to delete")
-
-    def send_chat_input(self):
-        # Get the input from the chat box
-        chat_input = self.chat_input.get()
-        
-        # Check for non-empty string
-        if chat_input.strip():
-            self.chat_output.insert(tk.END, f"User: {chat_input}\n")
-            self.chat_output.see(tk.END)
-            self.chat_input.delete(0, tk.END)
-            # Here, we pass the chat_input directly because it was already captured above
-            threading.Thread(target=self.start_chat_flow, args=(chat_input,)).start()
-        else:
-            # Optionally, let the user know they need to enter a message
-            tk.messagebox.showerror("Error", "Please enter a message.")
-
-    def initialize_rag_agents(self):
-        # Configure RAG agents
-        self.retrieve_assistant_agent = RetrieveAssistantAgent(
-            name="assistant",
-            system_message="You are a helpful assistant.",
-            llm_config=llm_config,  # llm_config would be your actual LLM configuration.
-        )
-
-        docs_directory = "D:\Pythonprojects\Projects\MasterMindGITHUBAUTOGEN"  # Update this with the document collection path.
-        self.retrieve_user_proxy_agent = RetrieveUserProxyAgent(
-            name="ragproxyagent",
-            retrieve_config={
-                "task": "qa",
-                "docs_path": docs_directory,
-            },
-        )
-
-    def start_chat_flow(self, chat_input):
-        # Reset the agents at the beginning of a chat flow
-        self.retrieve_assistant_agent.reset()
-        
-        # Initiating the chat with a question/problem statement
-        self.retrieve_user_proxy_agent.initiate_chat(
-            self.retrieve_assistant_agent,
-            problem=chat_input
-        )
-        
-        # This block represents processing the chat output.
-        # Extract the responses from the agents and display them on the GUI, this must be adapted to your case.
-        try:
-            messages = self.retrieve_user_proxy_agent.chat_messages
-            # Process and display messages in GUI
-            for message in messages:
-                self.log_to_widget(message['content'])
-        except Exception as e:
-            # Handle exceptions and errors
-            self.log_to_widget(str(e))
 
 if __name__ == "__main__":
     root = tk.Tk()
@@ -469,6 +650,25 @@ if __name__ == "__main__":
     chat_input = []
     company = "MasterMindGPT Game Maker"
     master = []
+
+    # Instantiate TaskBoardGUI first
+    task_board_gui = TaskBoardGUI(root, game, chat_input, company, master)
+
+    # Then, pass the properly initialized Job_listbox from task_board_gui to JobManagementSystem
+    job_management_system = JobManagementSystem(root, task_board_gui.Job_listbox, task_board_gui)
+
+    # Mock configuration, replace with actual configuration
+    mock_llm_config = {
+        "model": "mistralai_mistral-7b-instruct-v0.2",
+        "api_base": "http://127.0.0.1:5001/v1",
+        "api_type": "open_ai",
+        "api_key": "sk-111111111111111111111111111111111111111111111111",
+    }
+
+    print("Loaded model configurations:", llm_config)
+    for config in llm_config:
+        if config.get("model") == "gpt-4":
+            print("Error: 'gpt-4' found instead of 'mistralai_mistral-7b-instruct-v0.2'.")
 
     task_board_gui = TaskBoardGUI(root, game,chat_input,company, master )
     root.mainloop()
