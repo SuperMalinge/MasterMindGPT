@@ -6,8 +6,6 @@ from autogen.agentchat.contrib.retrieve_assistant_agent import RetrieveAssistant
 from autogen.agentchat.contrib.retrieve_user_proxy_agent import RetrieveUserProxyAgent
 import autogen
 import json
-
-
 import threading
 # "model": "mistral-instruct-7b",
 
