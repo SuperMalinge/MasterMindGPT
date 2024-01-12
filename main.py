@@ -172,8 +172,6 @@ class TaskBoardGUI:
             # Handle the situation appropriately, maybe by setting self.tasks = [] or providing an error message.
 
     def add_question_wrapper(self):
-        # You should determine how to properly create or get a reference to a question_window
-        # Perhaps it's created here, or maybe it's an existing part of your GUI
         question_window = self.create_or_get_question_window()
         self.job_management_system.add_question(question_window)
 
@@ -181,7 +179,6 @@ class TaskBoardGUI:
         # Create a new Toplevel window or return an existing reference
         # Dummy function for illustration. Replace with actual window creation code.
         return tk.Toplevel(self.root)
-
 
     def log_to_widget(self, message):
         self.chat_output.insert(tk.END, f"{message}\n")       
@@ -315,7 +312,6 @@ class TaskBoardGUI:
             "Status": "unsolved",
             "SubJob": None
         }
-
         # Simulate sending a message to the CEO who will then delegate it
         self.ceo_boss.delegate_task(job)
         self.Jobs.append(job)
