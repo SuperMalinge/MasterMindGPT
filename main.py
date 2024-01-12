@@ -486,7 +486,6 @@ class JobManagementSystem:
         self.selected_question_count = None
         self.task_board_gui = task_board_gui
 
-
     def update_Job_list(self):
         self.Job_listbox.delete(0, tk.END)
         for Job in self.Jobs:
@@ -506,7 +505,6 @@ class JobManagementSystem:
                 status = Job.get('Status', '')
                 subJob = Job.get('SubJob', '')
                 self.Job_listbox.insert(tk.END, f" Team: {team}, Job: {Job_desc}, Status: {status}, SubJob: {subJob}")
-
 
     def update_Job_count(self):
         Job_count = len(self.Jobs)
