@@ -630,9 +630,6 @@ class JobManagementSystem:
         question_button = tk.Button(question_window, text="Get Questions", command=lambda: self.get_questions_output(question_window))
         question_button.pack()
 
-
-
-
 if __name__ == "__main__":
     root = tk.Tk()
     game = []
