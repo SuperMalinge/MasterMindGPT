@@ -11,8 +11,6 @@ import threading
 
 from openai import OpenAI
 client = OpenAI(base_url="http://localhost:5001/v1", api_key="not-needed")
-
-
 llm_config = [
     {
         "model": "mistralai_mistral-7b-instruct-v0.2",
