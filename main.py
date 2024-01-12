@@ -407,8 +407,7 @@ class TaskBoardGUI:
         except Exception as e:
             # Handle exceptions and errors
             self.log_to_widget(str(e))
-
-
+            
 class Agent:
     def __init__(self, name, team):
         self.name = name
