@@ -6,11 +6,14 @@ from autogen.agentchat.contrib.retrieve_assistant_agent import RetrieveAssistant
 from autogen.agentchat.contrib.retrieve_user_proxy_agent import RetrieveUserProxyAgent
 import autogen
 import json
+
+
 import threading
 # "model": "mistral-instruct-7b",
 
 from openai import OpenAI
 client = OpenAI(base_url="http://localhost:5001/v1", api_key="not-needed")
+
 llm_config = [
     {
         "model": "mistralai_mistral-7b-instruct-v0.2",
@@ -56,12 +59,14 @@ question_count = "question count"
 Chat_output = "Chat output"
 
 class TaskBoardGUI:
-    def __init__(self, root, game, chat_input, company, master):
+    def __init__(self, root, game, chat_input, company, master, llm_config):
         self.root = root
         self.root.title("MasterMindGPT Job Board")
         self.Job = []
-        self.Jobs = []                
-        self.llm_config = llm_config  # This assumes llm_config is passed in during instantiation
+        self.Jobs = []     
+        self.chat_output = []           
+        self.llm_config = llm_config  # This assumes llm_config is passed in during instantiation               
+        self.logger = Logger(self.chat_output)
 
         # Create attributes for Job-related widgets
         self.retrieve_assistant_agent = None
@@ -86,7 +91,11 @@ class TaskBoardGUI:
         self.Job_listbox.pack()
         self.Job_listbox.place(x=450, y=30)
 
+        #initialize the classes
         self.job_management_system = JobManagementSystem(root,self.Job_listbox, self)
+        self.workflow_manager = WorkflowManager(llm_config, self.chat_output)
+        self.agent_actions = Agent_actions(team, task)
+        self.ceo = CEO()
         
         self.add_Job_button = tk.Button(root, text="Add Job", command=self.job_management_system.open_Job_window)
         self.add_Job_button.pack()
@@ -156,9 +165,6 @@ class TaskBoardGUI:
         self.agent_listbox.pack()
         self.agent_listbox.place(x=450, y=200)
 
-        # Initialize RAG agents.
-        self.initialize_rag_agents()
-
     def get_current_workflow(self):
         # If tasks is supposed to come from somewhere else in your class, update this method to use that.
         if hasattr(self, 'tasks'):
@@ -168,6 +174,8 @@ class TaskBoardGUI:
             # Handle the situation appropriately, maybe by setting self.tasks = [] or providing an error message.
 
     def add_question_wrapper(self):
+        # You should determine how to properly create or get a reference to a question_window
+        # Perhaps it's created here, or maybe it's an existing part of your GUI
         question_window = self.create_or_get_question_window()
         self.job_management_system.add_question(question_window)
 
@@ -175,10 +183,7 @@ class TaskBoardGUI:
         # Create a new Toplevel window or return an existing reference
         # Dummy function for illustration. Replace with actual window creation code.
         return tk.Toplevel(self.root)
-
-    def log_to_widget(self, message):
-        self.chat_output.insert(tk.END, f"{message}\n")       
-                                   
+                                     
     def open_train_agents_window(self):
         train_agents_window = tk.Toplevel(self.root)
         self.train_agents_label = tk.Label(train_agents_window, text="Train Agents: ")
@@ -287,88 +292,76 @@ class TaskBoardGUI:
  
     def send_chat_input(self):
         chat_input = self.chat_input.get()
-        if chat_input:            
-            threading.Thread(target=self.initiate_workflow, args=(chat_input,)).start()
+        if chat_input: 
+            workflow_manager = WorkflowManager(llm_config, self.chat_output)           
+            threading.Thread(target=workflow_manager.initiate_workflow, args=(chat_input,)).start()
         else:
             tk.messagebox.showerror("Error", "Please enter a Job to initiate the workflow")
-         
+
+class Logger:
+    def __init__(self, chat_output):
+        self.chat_output = chat_output
+
+    def log_to_widget(self, message):        
+        self.chat_output.insert(tk.END, f"{message}\n")
+
+class WorkflowManager:
+    def __init__(self, llm_config, chat_output):
+        self.llm_config = llm_config
+        self.chat_output = chat_output
+        self.initialize_rag_agents()
+
     def initiate_workflow(self, chat_input):
-        # Call any preprocessing required here
+        # Create an instance of Logger        
+        logger = Logger(self.chat_output)
         processed_input = self.preprocess_chat_input(chat_input)
-        task_board_gui.retrieve_assistant_agent_planner.reset()
-        
-        self.log_to_widget(f"Initiated workflow with input: {processed_input}")
-        # Simulate sending a message to the CEO with a directive to start the workflow  
-        task_board_gui.retrieve_user_proxy_agent.initiate_chat(task_board_gui.retrieve_assistant_agent_planner, problem=processed_input)    
-               
-        # Assuming 'processed_input' is the input for the Planner agent
+        self.retrieve_assistant_agent_planner.reset()
+        logger.log_to_widget(f"Initiated workflow with input: {processed_input}")
+        self.retrieve_user_proxy_agent.initiate_chat(self.retrieve_assistant_agent_planner, problem=processed_input)    
         job = {
             "Team": "1 Planner",
             "Job": processed_input,
             "Status": "unsolved",
             "SubJob": None
         }
-        # Simulate sending a message to the CEO who will then delegate it
         self.ceo_boss.delegate_task(job)
-        self.Jobs.append(job)
-        self.update_Job_list()
+        self.job_management_system.Jobs.append(job)
+        self.job_management_system.update_Job_list()
         self.log_to_widget(f"Delegated to Planner: {processed_input}")
 
-    # ..
     def process_chat_input(self, chat_input):
-        # This function is run in a new thread
         processed_input = self.preprocess_chat_input(chat_input)
-
-        # Assuming that 'processed_input' is ready to be sent to the Planner agent
         job = {
             "Team": "1 Planner",
             "Job": processed_input,
             "Status": "unsolved",
             "SubJob": None
         }
-    
-        # Simulate sending a message to the CEO who will then delegate it
         self.ceo_boss.delegate_task(job)
         self.Jobs.append(job)
         self.update_Job_list()
         self.log_to_widget(f"Delegated to Planner: {processed_input}")
 
     def preprocess_chat_input(self, chat_input):
-        # In a real scenario, you might have actual preprocessing like NLU or running an API call
-        # For our purpose, let's assume the preprocessed output is the input itself
         return chat_input
 
     def initialize_rag_agents(self):
         print("Initializing RAG agents with llm_config:", self.llm_config)
         docs_directory = r"D:\Pythonprojects\Projects\MasterMindGITHUBAUTOGEN"
-
-        # Initialize your agents here and add to CEO
         self.ceo_boss = CEO()
-        planner_agent = Agent("1 Planner", "Planner")
-        orchestra_agent = Agent("2 Orchestra", "Orchestra")
-
-        # Add agents to CEO
-        self.ceo_boss.add_agent(planner_agent)
-        self.ceo_boss.add_agent(orchestra_agent)
-
         try:
-            # Configure RAG assistant agent for Planner
             self.retrieve_assistant_agent_planner = RetrieveAssistantAgent(
                 name="Planner Agent",
                 system_message="You are a helpful assistant.",
                 llm_config=self.llm_config,
             )
             print("Planner Agent (RetrieveAssistantAgent) initialized successfully.")
-
-            # Configure RAG assistant agent for Orchestra
             self.retrieve_assistant_agent_orchestra = RetrieveAssistantAgent(
                 name="Orchestra Agent",
                 system_message="You orchestrate the workflow.",
                 llm_config=self.llm_config,
             )
             print("Orchestra Agent (RetrieveAssistantAgent) initialized successfully.")
-
-            # Configure RAG user proxy agent
             self.retrieve_user_proxy_agent = RetrieveUserProxyAgent(
                 name="CEO Proxy Agent",
                 retrieve_config={
@@ -377,38 +370,24 @@ class TaskBoardGUI:
                 },
             )
             print("CEO Proxy Agent (RetrieveUserProxyAgent) initialized successfully.")
-
         except Exception as e:
             print("Error during RAG agents initialization:", e)
             raise
 
-        # Store the agents in the class attributes if needed elsewhere in the class
-        self.planner_agent = planner_agent
-        self.orchestra_agent = orchestra_agent
-
     def start_chat_flow(self, chat_input):
         # Reset the agents at the beginning of a chat flow
-        self.retrieve_assistant_agent.reset()
-
-        
-        # Initiating the chat with a question/problem statement
-        self.retrieve_user_proxy_agent.initiate_chat(
-            self.retrieve_assistant_agent,
-            problem=chat_input
-        )
-        
-        # This block represents processing the chat output.
-        # Extract the responses from the agents and display them on the GUI, this must be adapted to your case.
+        self.retrieve_assistant_agent_planner.reset()        
+        self.retrieve_user_proxy_agent.initiate_chat(self.retrieve_assistant_agent_planner, problem=chat_input)
+        self.log_to_widget(f"Initiated chat with input: {chat_input}")
         try:
             messages = self.retrieve_user_proxy_agent.chat_messages
-            # Process and display messages in GUI
             for message in messages:
                 self.log_to_widget(message['content'])
         except Exception as e:
-            # Handle exceptions and errors
             self.log_to_widget(str(e))
-            
-class Agent:
+
+
+class Agent_actions:
     def __init__(self, name, team):
         self.name = name
         self.team = team
@@ -486,6 +465,7 @@ class JobManagementSystem:
         self.selected_question_count = None
         self.task_board_gui = task_board_gui
 
+
     def update_Job_list(self):
         self.Job_listbox.delete(0, tk.END)
         for Job in self.Jobs:
@@ -505,6 +485,7 @@ class JobManagementSystem:
                 status = Job.get('Status', '')
                 subJob = Job.get('SubJob', '')
                 self.Job_listbox.insert(tk.END, f" Team: {team}, Job: {Job_desc}, Status: {status}, SubJob: {subJob}")
+
 
     def update_Job_count(self):
         Job_count = len(self.Jobs)
@@ -638,11 +619,11 @@ if __name__ == "__main__":
     master = []
 
     # Instantiate TaskBoardGUI first
-    task_board_gui = TaskBoardGUI(root, game, chat_input, company, master)
+    task_board_gui = TaskBoardGUI(root, game, chat_input, company, master, llm_config)
 
     # Then, pass the properly initialized Job_listbox from task_board_gui to JobManagementSystem
     job_management_system = JobManagementSystem(root, task_board_gui.Job_listbox, task_board_gui)
-
+    
     # Mock configuration, replace with actual configuration
     mock_llm_config = {
         "model": "mistralai_mistral-7b-instruct-v0.2",
@@ -656,5 +637,5 @@ if __name__ == "__main__":
         if config.get("model") == "gpt-4":
             print("Error: 'gpt-4' found instead of 'mistralai_mistral-7b-instruct-v0.2'.")
 
-    task_board_gui = TaskBoardGUI(root, game,chat_input,company, master )
+    
     root.mainloop()
