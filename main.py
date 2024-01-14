@@ -83,7 +83,8 @@ class TaskBoardGUI:
         self.own_suggestion_entry = None
         self.scratch_question_entry = None   
         company = "MasterMindGPT Game Maker"    
-        self.company = company        
+        self.company = company
+                
 
         # Button to add Job
         # Display the Job list 
@@ -93,9 +94,10 @@ class TaskBoardGUI:
 
         #initialize the classes
         self.job_management_system = JobManagementSystem(root,self.Job_listbox, self)
-        self.workflow_manager = WorkflowManager(llm_config, self.chat_output)
+        self.workflow_manager = WorkflowManager(llm_config, self.chat_output, self.job_management_system, self.ceo_boss)
         self.agent_actions = Agent_actions(team, task)
-        self.ceo = CEO()
+        self.GamePlanningGUI = GamePlanningGUI(root)
+        self.ceo_boss = CEO()
         
         self.add_Job_button = tk.Button(root, text="Add Job", command=self.job_management_system.open_Job_window)
         self.add_Job_button.pack()
@@ -113,7 +115,7 @@ class TaskBoardGUI:
         self.add_question_button.place(x=580, y=0)
 
         # Button to get Plan
-        self.get_plan_button = tk.Button(root, text="Get Plan", command=self.get_plan)
+        self.get_plan_button = tk.Button(root, text="Get Plan", command=self.GamePlanningGUI.open_plan_window)
         self.get_plan_button.pack()
         self.get_plan_button.place(x=665, y=0)
 
@@ -262,17 +264,6 @@ class TaskBoardGUI:
         for pre, fill, node in RenderTree(self.root):
             print("%s%s" % (pre, node.name))
 
-    def get_plan(self):
-        plan_window = tk.Toplevel(self.root)
-        plan_label = tk.Label(plan_window, text="Plan:")
-        plan_label.pack()
-        plan_entry = tk.Entry(plan_window)
-        plan_entry.pack()
-        plan_button = tk.Button(plan_window, text="Get Plan", command=lambda: self.get_plan_output(plan_window))
-        plan_button.pack()
-        # The plan will be gathered from the planner team and then shown in the window
-        # A prompt needs to be set first with the start procedure
-
     def refresh_agents_status(self):
         # This method will fetch status from CEO and update the GUI
         task_statuses = self.ceo_boss.report_tasks_status()
@@ -286,17 +277,84 @@ class TaskBoardGUI:
         # (You can also update the question output with the status of each agent)
         # (You can also update the question count output with the status of each agent)
 
-    def get_plan_output(self, plan_window):
-        # Add logic to get and display the plan output
-        pass
- 
+         
     def send_chat_input(self):
         chat_input = self.chat_input.get()
         if chat_input: 
-            workflow_manager = WorkflowManager(llm_config, self.chat_output)           
+            workflow_manager = WorkflowManager(llm_config, self.chat_output, self.job_management_system, self.ceo_boss)           
             threading.Thread(target=workflow_manager.initiate_workflow, args=(chat_input,)).start()
         else:
             tk.messagebox.showerror("Error", "Please enter a Job to initiate the workflow")
+
+
+class GamePlanningGUI:
+    def __init__(self, root):
+        self.root = root
+        #self.create_widgets(self.root)
+
+    def create_widgets(self, window):
+        # Game Name
+        game_name_label = tk.Label(window, text="Game Name:")
+        game_name_label.pack()
+        self.game_name_entry = tk.Entry(window)
+        self.game_name_entry.pack()
+
+        # Game Genre
+        game_genre_label = tk.Label(window, text="Game Genre:")
+        game_genre_label.pack()
+        self.game_genre_entry = tk.Entry(window)
+        self.game_genre_entry.pack()
+
+        # Game Type
+        game_type_label = tk.Label(window, text="Game Type:")
+        game_type_label.pack()
+        self.game_type_entry = tk.Entry(window)
+        self.game_type_entry.pack()
+
+        # Game Story
+        game_story_label = tk.Label(window, text="Game Story:")
+        game_story_label.pack()
+        self.game_story_text = tk.Text(window, height=10, width=30)
+        self.game_story_text.pack()
+
+        # Save and Close button
+        save_close_button = tk.Button(window, text="Save and Close", command=self.save_and_close)
+        save_close_button.pack()
+
+    def open_plan_window(self):
+        plan_window = tk.Toplevel(self.root)        
+        plan_window.title("Plan")          
+        plan_window.geometry("500x700")  
+        self.create_widgets(plan_window)
+
+    def get_plan_output(self, plan_window):
+        Logger.log_to_widget(f"Plan: {self.game_name_entry.get()}")        
+        self.game_name_entry.delete(0, tk.END)
+        plan_window.destroy()
+
+    def save_and_close(self):
+        # Save the plan
+        self.save_plan()
+
+        # Close the window
+        self.root.destroy()
+
+    def save_plan(self):
+        # Retrieve the values from the entry fields
+        game_name = self.game_name_entry.get()
+        game_genre = self.game_genre_entry.get()
+        game_type = self.game_type_entry.get()
+        game_story = self.game_story_text.get("1.0", tk.END)
+
+        # Save the values
+        # This could be writing to a file, updating a database, etc.
+        # For now, let's just print the values
+        print("Game Name:", game_name)
+        print("Game Genre:", game_genre)
+        print("Game Type:", game_type)
+        print("Game Story:", game_story)
+
+        
 
 class Logger:
     def __init__(self, chat_output):
@@ -306,10 +364,12 @@ class Logger:
         self.chat_output.insert(tk.END, f"{message}\n")
 
 class WorkflowManager:
-    def __init__(self, llm_config, chat_output):
+    def __init__(self, llm_config, chat_output, job_management_system, ceo_boss):
         self.llm_config = llm_config
-        self.chat_output = chat_output
-        self.initialize_rag_agents()
+        self.chat_output = chat_output        
+        self.job_management_system = job_management_system
+        self.ceo_boss = ceo_boss                
+        self.initialize_rag_agents(ceo_boss)
 
     def initiate_workflow(self, chat_input):
         # Create an instance of Logger        
@@ -327,7 +387,7 @@ class WorkflowManager:
         self.ceo_boss.delegate_task(job)
         self.job_management_system.Jobs.append(job)
         self.job_management_system.update_Job_list()
-        self.log_to_widget(f"Delegated to Planner: {processed_input}")
+        logger.log_to_widget(f"Delegated to Planner: {processed_input}")
 
     def process_chat_input(self, chat_input):
         processed_input = self.preprocess_chat_input(chat_input)
@@ -340,14 +400,14 @@ class WorkflowManager:
         self.ceo_boss.delegate_task(job)
         self.Jobs.append(job)
         self.update_Job_list()
-        self.log_to_widget(f"Delegated to Planner: {processed_input}")
+        Logger.log_to_widget(f"Delegated to Planner: {processed_input}")
 
     def preprocess_chat_input(self, chat_input):
         return chat_input
 
-    def initialize_rag_agents(self):
+    def initialize_rag_agents(self, ceo_boss):
         print("Initializing RAG agents with llm_config:", self.llm_config)
-        docs_directory = r"D:\Pythonprojects\Projects\MasterMindGITHUBAUTOGEN"
+        docs_directory = r"D:\Pythonprojects\Projects\MasterMindGITHUBAUTOGEN\docs"
         self.ceo_boss = CEO()
         try:
             self.retrieve_assistant_agent_planner = RetrieveAssistantAgent(
@@ -356,12 +416,16 @@ class WorkflowManager:
                 llm_config=self.llm_config,
             )
             print("Planner Agent (RetrieveAssistantAgent) initialized successfully.")
+            # Immediately add the agent to the CEO's list
+            self.ceo_boss.add_agent(self.retrieve_assistant_agent_planner)
             self.retrieve_assistant_agent_orchestra = RetrieveAssistantAgent(
                 name="Orchestra Agent",
                 system_message="You orchestrate the workflow.",
                 llm_config=self.llm_config,
             )
             print("Orchestra Agent (RetrieveAssistantAgent) initialized successfully.")
+            # Immediately add the agent to the CEO's list
+            self.ceo_boss.add_agent(self.retrieve_assistant_agent_orchestra)            
             self.retrieve_user_proxy_agent = RetrieveUserProxyAgent(
                 name="CEO Proxy Agent",
                 retrieve_config={
@@ -370,6 +434,7 @@ class WorkflowManager:
                 },
             )
             print("CEO Proxy Agent (RetrieveUserProxyAgent) initialized successfully.")
+            # Immediately add the agent to the CEO's list            
         except Exception as e:
             print("Error during RAG agents initialization:", e)
             raise
@@ -378,13 +443,13 @@ class WorkflowManager:
         # Reset the agents at the beginning of a chat flow
         self.retrieve_assistant_agent_planner.reset()        
         self.retrieve_user_proxy_agent.initiate_chat(self.retrieve_assistant_agent_planner, problem=chat_input)
-        self.log_to_widget(f"Initiated chat with input: {chat_input}")
+        Logger.log_to_widget(f"Initiated chat with input: {chat_input}")
         try:
             messages = self.retrieve_user_proxy_agent.chat_messages
             for message in messages:
-                self.log_to_widget(message['content'])
+                Logger.log_to_widget(message['content'])
         except Exception as e:
-            self.log_to_widget(str(e))
+            Logger.log_to_widget(str(e))
 
 
 class Agent_actions:
@@ -395,6 +460,7 @@ class Agent_actions:
 
     def handle_task(self, task):
         self.tasks.append(task)
+        Logger.log_to_widget(f"{self.name}: received task -> {task}")
         print(f"{self.name}: received task -> {task}")
 
     def report_status(self):
@@ -420,7 +486,17 @@ class CEO:
     def add_agent(self, agent):
         self.agents[agent.name] = agent
 
-    def delegate_task(self, task):
+    def delegate_task(self, task):        
+        #first lets check if there are any agents available
+        if len(self.agents) == 0:
+            print("No agents available")
+            return
+        
+        #second lets check if there are any tasks in the queue
+        if len(self.Jobs) == 0:
+            print("No tasks in the queue")
+            return
+    
         # Find the right agent to delegate the task
         # Here we'd use a method to process the task if needed.
         # As an example, we're assuming the task goes directly to the Planner
@@ -465,7 +541,6 @@ class JobManagementSystem:
         self.selected_question_count = None
         self.task_board_gui = task_board_gui
 
-
     def update_Job_list(self):
         self.Job_listbox.delete(0, tk.END)
         for Job in self.Jobs:
@@ -485,7 +560,6 @@ class JobManagementSystem:
                 status = Job.get('Status', '')
                 subJob = Job.get('SubJob', '')
                 self.Job_listbox.insert(tk.END, f" Team: {team}, Job: {Job_desc}, Status: {status}, SubJob: {subJob}")
-
 
     def update_Job_count(self):
         Job_count = len(self.Jobs)
@@ -623,6 +697,12 @@ if __name__ == "__main__":
 
     # Then, pass the properly initialized Job_listbox from task_board_gui to JobManagementSystem
     job_management_system = JobManagementSystem(root, task_board_gui.Job_listbox, task_board_gui)
+
+    # Finally, pass the properly initialized job_management_system to TaskBoardGUI
+    task_board_gui.job_management_system = job_management_system
+
+    # Instantiate GamePlanningGUI
+    game_planning_gui = GamePlanningGUI(root)
     
     # Mock configuration, replace with actual configuration
     mock_llm_config = {
