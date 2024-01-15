@@ -348,9 +348,7 @@ class GamePlanningGUI:
         print("Game Genre:", game_genre)
         print("Game Type:", game_type)
         print("Game Story:", game_story)
-
-        
-
+      
 class Logger:
     def __init__(self, chat_output):
         self.chat_output = chat_output
