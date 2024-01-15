@@ -38,7 +38,6 @@ config_list = autogen.config_list_from_json(
 assert len(config_list) > 0
 print("models to use: ", [config_list[i]["model"] for i in range(len(config_list))])
 
-
 #use constants for fixed strings
 question = "question"
 ask_question = "ask question"
@@ -83,9 +82,7 @@ class TaskBoardGUI:
         self.scratch_question_entry = None   
         company = "MasterMindGPT Game Maker"    
         self.company = company
-                
-
-        # Button to add Job
+                       
         # Display the Job list 
         self.Job_listbox = tk.Listbox(root, width=80)  # Adjust the width here
         self.Job_listbox.pack()
