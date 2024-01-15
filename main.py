@@ -272,7 +272,6 @@ class TaskBoardGUI:
         # (You can also update the current workflow output with the status of each agent)
         # (You can also update the question output with the status of each agent)
         # (You can also update the question count output with the status of each agent)
-
          
     def send_chat_input(self):
         chat_input = self.chat_input.get()
