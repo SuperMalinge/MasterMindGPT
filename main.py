@@ -173,7 +173,6 @@ class TaskBoardGUI:
 
     def add_question_wrapper(self):
         # You should determine how to properly create or get a reference to a question_window
-        # Perhaps it's created here, or maybe it's an existing part of your GUI
         question_window = self.create_or_get_question_window()
         self.job_management_system.add_question(question_window)
 
