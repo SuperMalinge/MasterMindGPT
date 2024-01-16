@@ -708,6 +708,5 @@ if __name__ == "__main__":
     for config in llm_config:
         if config.get("model") == "gpt-4":
             print("Error: 'gpt-4' found instead of 'mistralai_mistral-7b-instruct-v0.2'.")
-
     
     root.mainloop()
