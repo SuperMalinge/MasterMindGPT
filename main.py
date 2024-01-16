@@ -281,7 +281,6 @@ class TaskBoardGUI:
         else:
             tk.messagebox.showerror("Error", "Please enter a Job to initiate the workflow")
 
-
 class GamePlanningGUI:
     def __init__(self, root):
         self.root = root
