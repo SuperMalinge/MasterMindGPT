@@ -41,7 +41,7 @@ Imagine a symphony, where each instrument plays its part to create a harmonious 
   <br />
   <h1 align="center">MasterMindGPT</h1>
   <br />
-  <p align="center">Auf der Suche nach einer KI-Lösung? Ich freue mich, Ihnen einen <b>100% kostenlosen und Open-Source-KI-Bot</b> vorstellen zu können. Dieser Bot wird Ihnen helfen, Ihre Fähigkeiten und Ihr Engagement durch automatisierte Funktionen mit Ihrem Android-Telefon/Tablet/Emulator zu steigern. <b>Kein Root erforderlich.</b> <p>
+  <p align="center">
   <p align="center">
     <a href="https://github.com/YourUsername/MasterMindGPT/blob/master/LICENSE">
       <img src="https://img.shields.io/github/license/SuperMalinge/MasterMindGPT?style=flat"  alt=""/>
