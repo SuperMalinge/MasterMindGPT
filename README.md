@@ -37,28 +37,28 @@ Discord: SuperMalinge
 Imagine a symphony, where each instrument plays its part to create a harmonious melody. That's what MasterMindGPT is all about - a harmonious collaboration of tasks and teams working together to create something extraordinary.
 
 <p align="center">
-  <img src="https://github.com/YourUsername/MasterMindGPT/raw/master/res/logo.png" alt="logo">
+  <img src="https://github.com/SuperMalinge/MasterMindGPT/raw/master/res/logo.png" alt="logo">
   <br />
   <h1 align="center">MasterMindGPT</h1>
   <br />
   <p align="center">
   <p align="center">
-    <a href="https://github.com/YourUsername/MasterMindGPT/blob/master/LICENSE">
+    <a href="https://github.com/SuperMalinge/MasterMindGPT/blob/master/LICENSE">
       <img src="https://img.shields.io/github/license/SuperMalinge/MasterMindGPT?style=flat"  alt=""/>
     </a>
     <a href="https://www.python.org/">
       <img src="https://img.shields.io/badge/built%20with-Python3-red.svg?style=flat"  alt=""/>
     </a>
-    <a href="https://github.com/YourUsername/MasterMindGPT/pulls">
+    <a href="https://github.com/SuperMalinge/MasterMindGPT/pulls">
       <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat"  alt=""/>
     </a>
-    <a href="https://github.com/YourUsername/MasterMindGPT/issues">
+    <a href="https://github.com/SuperMalinge/MasterMindGPT/issues">
     	<img src="https://img.shields.io/github/issues/SuperMalinge/MasterMindGPT?style=flat"  alt=""/>
     </a>
-    <a href="https://github.com/YourUsername/MasterMindGPT/pulls">
+    <a href="https://github.com/SuperMalinge/MasterMindGPT/pulls">
       <img src="https://img.shields.io/github/issues-pr/SuperMalinge/MasterMindGPT?style=flat"  alt=""/>
     </a>
-    <a href="https://github.com/YourUsername/MasterMindGPT/stargazers">
+    <a href="https://github.com/SuperMalinge/MasterMindGPT/stargazers">
 	    <img src="https://img.shields.io/github/stars/SuperMalinge/MasterMindGPT?style=flat" alt="">
     </a>
     <a href="https://img.shields.io/github/last-commit/SuperMalinge/MasterMindGPT/master?style=flat">
@@ -67,7 +67,7 @@ Imagine a symphony, where each instrument plays its part to create a harmonious 
     <a href="https://pypi.org/project/MasterMindGPT/">
       <img src="https://img.shields.io/pypi/dm/MasterMindGPT" alt="">
     </a>
-    <a href="https://github.com/YourUsername/MasterMindGPT#backers">
+    <a href="https://github.com/SuperMalinge/MasterMindGPT#backers">
 	    <img src="https://img.shields.io/opencollective/backers/MasterMindGPT?style=flat" alt="">
     </a>
     <a href="https://discord.gg/hApmsu39">
