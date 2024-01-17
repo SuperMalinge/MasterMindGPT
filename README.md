@@ -36,6 +36,46 @@ Discord: SuperMalinge
 
 Imagine a symphony, where each instrument plays its part to create a harmonious melody. That's what MasterMindGPT is all about - a harmonious collaboration of tasks and teams working together to create something extraordinary.
 
+<p align="center">
+  <img src="https://github.com/YourUsername/MasterMindGPT/raw/master/res/logo.png" alt="logo">
+  <br />
+  <h1 align="center">MasterMindGPT</h1>
+  <br />
+  <p align="center">Auf der Suche nach einer KI-Lösung? Ich freue mich, Ihnen einen <b>100% kostenlosen und Open-Source-KI-Bot</b> vorstellen zu können. Dieser Bot wird Ihnen helfen, Ihre Fähigkeiten und Ihr Engagement durch automatisierte Funktionen mit Ihrem Android-Telefon/Tablet/Emulator zu steigern. <b>Kein Root erforderlich.</b> <p>
+  <p align="center">
+    <a href="https://github.com/YourUsername/MasterMindGPT/blob/master/LICENSE">
+      <img src="https://img.shields.io/github/license/SuperMalinge/MasterMindGPT?style=flat"  alt=""/>
+    </a>
+    <a href="https://www.python.org/">
+      <img src="https://img.shields.io/badge/built%20with-Python3-red.svg?style=flat"  alt=""/>
+    </a>
+    <a href="https://github.com/YourUsername/MasterMindGPT/pulls">
+      <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat"  alt=""/>
+    </a>
+    <a href="https://github.com/YourUsername/MasterMindGPT/issues">
+    	<img src="https://img.shields.io/github/issues/SuperMalinge/MasterMindGPT?style=flat"  alt=""/>
+    </a>
+    <a href="https://github.com/YourUsername/MasterMindGPT/pulls">
+      <img src="https://img.shields.io/github/issues-pr/SuperMalinge/MasterMindGPT?style=flat"  alt=""/>
+    </a>
+    <a href="https://github.com/YourUsername/MasterMindGPT/stargazers">
+	    <img src="https://img.shields.io/github/stars/SuperMalinge/MasterMindGPT?style=flat" alt="">
+    </a>
+    <a href="https://img.shields.io/github/last-commit/SuperMalinge/MasterMindGPT/master?style=flat">
+	    <img src="https://img.shields.io/github/last-commit/SuperMalinge/MasterMindGPT/master?style=flat" alt="">
+    </a>
+    <a href="https://pypi.org/project/MasterMindGPT/">
+      <img src="https://img.shields.io/pypi/dm/MasterMindGPT" alt="">
+    </a>
+    <a href="https://github.com/YourUsername/MasterMindGPT#backers">
+	    <img src="https://img.shields.io/opencollective/backers/MasterMindGPT?style=flat" alt="">
+    </a>
+    <a href="https://discord.gg/hApmsu39">
+	    <img src="https://img.shields.io/discord/YourDiscordServerID?style=flat" alt="">
+    </a>
+</p>
+
+
 ## The Maestro: Adding Tasks
 Our journey begins with the addition of tasks like these:
 
