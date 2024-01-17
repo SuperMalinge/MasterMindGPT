@@ -1,7 +1,7 @@
 # Update
 
 I'm excited to announce that the code has been updated and the functionality to add jobs to the job board is now working as expected. The next step in our journey is to set up the agents correctly. Stay tuned for more updates!
-* The Get the plan window has been updated 01/204
+* The Get the plan window has been updated 01/2024
 
 
 # Important
