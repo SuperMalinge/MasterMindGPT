@@ -442,7 +442,6 @@ class WorkflowManager:
         except Exception as e:
             Logger.log_to_widget(str(e))
 
-
 class Agent_actions:
     def __init__(self, name, team):
         self.name = name
