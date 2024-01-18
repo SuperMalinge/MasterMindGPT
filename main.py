@@ -6,7 +6,8 @@ from autogen.agentchat.contrib.retrieve_assistant_agent import RetrieveAssistant
 from autogen.agentchat.contrib.retrieve_user_proxy_agent import RetrieveUserProxyAgent
 import autogen
 import json
-import sys
+from dataclasses import dataclass, field
+from typing import Optional
 
 
 import threading
@@ -525,6 +526,20 @@ class CEO:
             status_report[agent_name] = agent.report_status()
         return status_report
 
+
+@dataclass
+class Job:
+    team: str
+    description: str
+    status: str = 'not solved'
+    subjob: Optional[str] = None
+    question: Optional[str] = None
+    ask_question: Optional[str] = None
+    suggestion1: Optional[str] = None
+    suggestion2: Optional[str] = None
+    own_suggestion: Optional[str] = None
+    scratch_question: Optional[str] = None
+
 class JobManagementSystem:
     def __init__(self, root, Job_listbox, task_board_gui):
         self.root = root
@@ -548,25 +563,13 @@ class JobManagementSystem:
         self.selected_question_count = None
         self.task_board_gui = task_board_gui
 
-    def update_Job_list(self):
+    def update_job_list(self):
         self.Job_listbox.delete(0, tk.END)
-        for Job in self.Jobs:
-            if all(key in Job for key in ['Team', 'Question', 'Ask Question', 'Suggestion 1', 'Suggestion 2', 'Own Suggestion', 'Scratch Question']):
-                team = Job.get('Team', '')
-                question = Job.get('Question', '')
-                ask_question = Job.get('Ask Question', '')
-                suggestion1 = Job.get('Suggestion 1', '')
-                suggestion2 = Job.get('Suggestion 2', '')
-                own_suggestion = Job.get('Own Suggestion', '')
-                scratch_question = Job.get('Scratch Question', '')
-
-                self.Job_listbox.insert(tk.END, f"Team: {team}, Question: {question}, Ask Question: {ask_question}, Suggestion 1: {suggestion1}, Suggestion 2: {suggestion2}, Own Suggestion: {own_suggestion}, Scratch Question: {scratch_question}")
-            else:
-                team = Job.get('Team', '')
-                Job_desc = Job.get('Job', '')
-                status = Job.get('Status', '')
-                subJob = Job.get('SubJob', '')
-                self.Job_listbox.insert(tk.END, f" Team: {team}, Job: {Job_desc}, Status: {status}, SubJob: {subJob}")
+        for job in self.Jobs:
+            job_details = f"Team: {job.team}, Job: {job.description}, Status: {job.status}"
+            if job.subjob:
+                job_details += f", SubJob: {job.subjob}"
+            self.Job_listbox.insert(tk.END, job_details)
 
     def update_Job_count(self):
         Job_count = len(self.Jobs)
@@ -661,25 +664,20 @@ class JobManagementSystem:
         add_task_button = tk.Button(job_window, text="Add Job", command=lambda: self.add_job(job_window))
         add_task_button.pack()
 
-    def add_job(self, job_window):        
+    def add_job(self, job_window):
         team = self.selected_team.get()
-        job_description = self.job_description_entry.get()        
+        job_description = self.job_description_entry.get()
         status = self.selected_status.get()
         subjob = self.subjob_entry.get()
 
-        if team and job_description and status:
-            self.Jobs.append({
-                "Team": team,
-                "Job": job_description,
-                "Status": status,
-                "SubJob": subjob
-            })
-            self.update_Job_list()
-            self.task_board_gui.chat_output.insert(tk.END, f"A new Job has been added: Team: {team}, Job: {job_description}, Status: {status}, SubJob: {subjob}\n")  # Insert the Job into the chat outpu            
+        if team and job_description:
+            new_job = Job(team=team, description=job_description, status=status, subjob=subjob)
+            self.Jobs.append(new_job)
+            self.update_job_list()
+            self.task_board_gui.chat_output.insert(tk.END, "A new Job has been added: " + str(new_job) + "\n")
             job_window.destroy()
         else:
             tk.messagebox.showerror("Error", "Please fill in all fields")
-            #Example on how to add a Job: self.Jobs.append({"Team": "1 Planner", "Job": "Plan a game from a prompt given by the CEO", "Status": "not solved", "SubJob": "Plan a game from a prompt given by the CEO"})
 
     def open_question_window(self):
         question_window = tk.Toplevel(self.root)
