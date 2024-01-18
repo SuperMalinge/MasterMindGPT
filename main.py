@@ -6,6 +6,8 @@ from autogen.agentchat.contrib.retrieve_assistant_agent import RetrieveAssistant
 from autogen.agentchat.contrib.retrieve_user_proxy_agent import RetrieveUserProxyAgent
 import autogen
 import json
+import sys
+
 
 import threading
 # "model": "mistral-instruct-7b",
@@ -22,21 +24,33 @@ llm_config = [
     }
 ]
 
+
 # Write the configuration to a JSON file
-with open('config.json', 'w') as f:
-    json.dump(llm_config, f)
+try:
+    with open('config.json', 'w') as f:
+        json.dump(llm_config, f)
+except IOError as e:
+    print(f"Error writing config to config.json: {e}")
+    exit(1)
 
-config_list = autogen.config_list_from_json(
-    env_or_file='config.json',
-    file_location=".",
-    filter_dict={
-        "model": "mistralai_mistral-7b-instruct-v0.2",       
-        "api_base": "http://127.0.0.1:5001/v1",               
-    },
-)
+# Try loading the configuration with expected filters
+try:
+    config_list = autogen.config_list_from_json(
+        env_or_file='config.json',
+        file_location=".",
+        filter_dict={
+            "model": "mistralai_mistral-7b-instruct-v0.2",
+            "api_base": "http://127.0.0.1:5001/v1",
+        },
+    )
+    if not config_list:
+        raise ValueError("No matching configurations found.")
+except (IOError, ValueError) as e:
+    print(f"An error occurred: {e}")
+    # Handle no configuration found (Stop the program or allow for retry, etc.)
+    exit(1)
 
-assert len(config_list) > 0
-print("models to use: ", [config_list[i]["model"] for i in range(len(config_list))])
+print("Models to use: ", [config["model"] for config in config_list])
 
 #use constants for fixed strings
 question = "question"
@@ -82,7 +96,9 @@ class TaskBoardGUI:
         self.scratch_question_entry = None   
         company = "MasterMindGPT Game Maker"    
         self.company = company
-                       
+                
+
+        # Button to add Job
         # Display the Job list 
         self.Job_listbox = tk.Listbox(root, width=80)  # Adjust the width here
         self.Job_listbox.pack()
@@ -172,13 +188,12 @@ class TaskBoardGUI:
             # Handle the situation appropriately, maybe by setting self.tasks = [] or providing an error message.
 
     def add_question_wrapper(self):
-        # You should determine how to properly create or get a reference to a question_window
+        # You should determine how to properly create or get a reference to a question_window       
         question_window = self.create_or_get_question_window()
         self.job_management_system.add_question(question_window)
 
     def create_or_get_question_window(self):
-        # Create a new Toplevel window or return an existing reference
-        # Dummy function for illustration. Replace with actual window creation code.
+        # Create a new Toplevel window or return an existing reference        
         return tk.Toplevel(self.root)
                                      
     def open_train_agents_window(self):
@@ -346,7 +361,8 @@ class GamePlanningGUI:
         print("Game Genre:", game_genre)
         print("Game Type:", game_type)
         print("Game Story:", game_story)
-      
+                
+
 class Logger:
     def __init__(self, chat_output):
         self.chat_output = chat_output
@@ -441,6 +457,7 @@ class WorkflowManager:
                 Logger.log_to_widget(message['content'])
         except Exception as e:
             Logger.log_to_widget(str(e))
+
 
 class Agent_actions:
     def __init__(self, name, team):
@@ -706,5 +723,6 @@ if __name__ == "__main__":
     for config in llm_config:
         if config.get("model") == "gpt-4":
             print("Error: 'gpt-4' found instead of 'mistralai_mistral-7b-instruct-v0.2'.")
+
     
     root.mainloop()
