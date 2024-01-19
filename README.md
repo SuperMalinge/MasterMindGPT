@@ -14,8 +14,6 @@ I'm excited to announce that the code has been updated and the functionality to 
 
 The next step is that the CEO Agent is going to send the prompt to the Planner Agent, and this has to be done via the Job board. This is not working right now.
 
-!mastermind1t
-
 
 # MasterMindGPT
 
@@ -25,6 +23,7 @@ Next level AutoGen with teams, tools and training to reach your goals.
 # Installation
 - create a new environment with python 3.10
 - pip install autogen - for the AutoGen library
+- install a local LLM - Here LM Studio was used
 
 # How To Use
 
