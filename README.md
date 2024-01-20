@@ -5,6 +5,7 @@ I'm excited to announce that the code has been updated and the functionality to 
 * More Graceful Error Handling with Configuration Files 01/2024
 * Improved Job Class 01/2024
 * Improved CEO Class 01/2024
+* refactored and splitt code 01/2024
 
 # Important
 
