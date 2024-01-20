@@ -9,7 +9,6 @@ import json
 from dataclasses import dataclass, field
 from typing import Optional
 
-
 import threading
 # "model": "mistral-instruct-7b",
 
@@ -24,7 +23,6 @@ llm_config = [
         "api_key": "sk-111111111111111111111111111111111111111111111111",
     }
 ]
-
 
 # Write the configuration to a JSON file
 try:
