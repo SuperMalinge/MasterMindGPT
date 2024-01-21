@@ -34,6 +34,25 @@ Next level AutoGen with teams, tools and training to reach your goals.
 ## Developer 
 Discord: SuperMalinge
 
+## Todo List
+
+- [ ] **High Priority:**
+   - [ ] Agents opening Tasks
+   - [ ] CEO takes controll over the plan
+   - [ ] Agents training and performance
+
+- [ ] **Features:**
+   - [ ] Application planning
+   - [ ] Game planning
+   - [ ] Web search if the Agent has no clue
+   - [ ] Examples for the Quality Team
+   - [ ] Code running to check if there is no issue
+   - [ ] Manually add more Agents to a team
+   - [ ] Vector Database to store snippets and a whole project
+   - [ ] Observer Agent that tracks and evaluates the whole process
+   - [ ] Performance check on different LLM Models
+
+
 # MasterMindGPT: A Symphony of Tasks
 
 Imagine a symphony, where each instrument plays its part to create a harmonious melody. That's what MasterMindGPT is all about - a harmonious collaboration of tasks and teams working together to create something extraordinary.
