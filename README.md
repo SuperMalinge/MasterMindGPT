@@ -38,7 +38,7 @@ Discord: SuperMalinge
 
 - [ ] **High Priority:**
    - [ ] Agents opening Tasks
-   - [ ] CEO takes controll over the plan
+   - [ ] CEO takes control over the plan
    - [ ] Agents training and performance
 
 - [ ] **Features:**
