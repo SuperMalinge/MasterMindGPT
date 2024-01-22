@@ -2,7 +2,6 @@ import tkinter as tk
 from data.job import Job  
 from models.logger import Logger
 
-
 class JobManagementSystem:
     def __init__(self, root, Job_listbox, task_board_gui):
         self.root = root
