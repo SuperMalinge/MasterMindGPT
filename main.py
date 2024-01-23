@@ -32,5 +32,4 @@ if __name__ == "__main__":
     game_planning_gui = GamePlanningGUI(root)
 
 
-
     root.mainloop()
