@@ -31,5 +31,4 @@ if __name__ == "__main__":
     task_board_gui.job_management_system = job_management_system
     game_planning_gui = GamePlanningGUI(root)
 
-
     root.mainloop()
