@@ -110,7 +110,6 @@ adding tasks like these:
 
 ```
 
-
 - processing-> add tasks and subtasks for the teams to a Board > priorizing on what needs to be done first
 Any ```[Task][Level:1][Plan][Prio:1][not solved]``` remaining? assign tasks! and make them [Task][Level:2]
 
