@@ -29,7 +29,6 @@ Next level AutoGen with teams, tools and training to reach your goals.
 
 - Simply write any instruction in any language in free text to get started.
 
-
 ## Developer 
 Discord: SuperMalinge
 
