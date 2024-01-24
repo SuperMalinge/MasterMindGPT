@@ -15,7 +15,6 @@ I'm excited to announce that the code has been updated and the functionality to 
 
 The next step is that the CEO Agent is going to send the prompt to the Planner Agent, and this has to be done via the Job board. This is not working right now.
 
-
 # MasterMindGPT
 
 Next level AutoGen with teams, tools and training to reach your goals.
