@@ -105,8 +105,6 @@ Our journey begins with the addition of tasks like these:
 
 ![task1](https://github.com/SuperMalinge/MasterMindGPT/assets/64928345/df9965b5-6512-4b48-8efd-92d5c89234c8)
 
-
-
 adding tasks like these:
 ```
 [Task][Level:1][Basic Plan][Prio:1][not solved][Basic plan on how the app should look like]
