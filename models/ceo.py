@@ -35,7 +35,6 @@ class CEO:
         print(f"Delegated task '{job.description}' to {job.team}")
         Logger.log_to_widget(f"Delegated task '{job.description}' to {job.team}")
        
-
     def report_tasks_status(self):
         status_report = {agent_name: agent.report_status() for agent_name, agent in self.agents.items()}
         return status_report
