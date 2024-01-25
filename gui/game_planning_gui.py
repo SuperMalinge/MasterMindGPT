@@ -47,8 +47,7 @@ class GamePlanningGUI:
     def save_and_close(self):
         # Save the plan
         self.save_plan()
-
-        # Close the window
+        
         self.root.destroy()
 
     def save_plan(self):
