@@ -55,7 +55,6 @@ class GamePlanningGUI:
         game_type = self.game_type_entry.get()
         game_story = self.game_story_text.get("1.0", tk.END)
 
-        # This could be writing to a file, updating a database, etc.
         # For now, let's just print the values
         print("Game Name:", game_name)
         print("Game Genre:", game_genre)
