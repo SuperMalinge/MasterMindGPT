@@ -50,7 +50,6 @@ Discord: SuperMalinge
    - [ ] Observer Agent that tracks and evaluates the whole process
    - [ ] Performance check on different LLM Models
 
-
 # MasterMindGPT: A Symphony of Tasks
 
 Imagine a symphony, where each instrument plays its part to create a harmonious melody. That's what MasterMindGPT is all about - a harmonious collaboration of tasks and teams working together to create something extraordinary.
