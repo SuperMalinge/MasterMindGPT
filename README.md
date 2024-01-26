@@ -259,7 +259,6 @@ Taskboard looks like this now:
 ```
 [Task][Level:5-1][Frontend][Prio:1][solved][Build choose options for the menue][Code] 
 [Task][Level:5-2][Backend][Prio:1][solved][build the choose options for processing data][Code]
-...
 ```
 
 ### Quality check Phase
