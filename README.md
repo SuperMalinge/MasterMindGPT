@@ -324,7 +324,6 @@ Taskboard looks like this now:
     when its done, send it back with [solved task]
 
 
-
 Contributing
 
 Please read CONTRIBUTING.md for details on contributing to this project.
