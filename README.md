@@ -269,7 +269,6 @@ Taskboard looks like this now:
 4. ask user if this is statisfied, if not try to reprocess it or let the user give the answer
 5. Save the whole plan and make it a pattern / basic plan for the specific topic. Rate it on the quality
 
-
 6 Debug and Error
 
     Get all tasks with [Task][Level:6-*][*TEAM*][Prio:*][not solved]
