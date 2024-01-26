@@ -111,7 +111,6 @@ adding tasks like these:
 - processing-> add tasks and subtasks for the teams to a Board > priorizing on what needs to be done first
 Any ```[Task][Level:1][Plan][Prio:1][not solved]``` remaining? assign tasks! and make them [Task][Level:2]
 
-
 ## The Orchestra: Level 2 Team
 
 Next, our orchestra - the Level 2 Team - checks on all tasks. Do we have the resources to solve the tasks? Does the AI understand what needs to be done? Is anything missing? All teams are assigned to the tasks, and the taskboard is updated accordingly.
