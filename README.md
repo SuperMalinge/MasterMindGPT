@@ -93,7 +93,6 @@ Imagine a symphony, where each instrument plays its part to create a harmonious 
     </a>
 </p>
 
-
 ## The Maestro: Adding Tasks
 Our journey begins with the addition of tasks like these:
 
