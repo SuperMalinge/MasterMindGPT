@@ -5,6 +5,7 @@ class Agent_actions:
         self.name = name
         self.team = team
         self.tasks = []
+        self.logger = Logger()
 
     def handle_task(self, task):
         self.tasks.append(task)
@@ -17,3 +18,4 @@ class Agent_actions:
             "total_tasks": len(self.tasks),
             "current_tasks": [task['Job'] for task in self.tasks]
         }
+
