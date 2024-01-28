@@ -7,7 +7,6 @@ from models.ceo import CEO
 from models.agent_actions import Agent_actions
 from gui.game_planning_gui import GamePlanningGUI
 
-
 llm_config = [
     {
         "model": "mistralai_mistral-7b-instruct-v0.2",
@@ -25,7 +24,6 @@ class TaskBoardGUI:
         self.Jobs = []     
         self.chat_output = []           
         self.llm_config = llm_config  # This assumes llm_config is passed in during instantiation               
-        self.logger = Logger(self.chat_output)
 
         # Create attributes for Job-related widgets
         self.retrieve_assistant_agent = None
@@ -104,6 +102,10 @@ class TaskBoardGUI:
         self.chat_output.pack(side=tk.LEFT)    
         self.chat_output.place(x=100, y=0)    
 
+        # Create the Logger instance
+        self.logger = Logger(self.chat_output)
+        self.logger.log_to_widget("Initializing...")
+
         #task list label placed below the Job list
         self.task_list_label = tk.Label(root, text="Job List")
         self.task_list_label.pack()
@@ -122,11 +124,12 @@ class TaskBoardGUI:
         # Create the Listbox widget for agents
         self.agent_listbox_label = tk.Label(root, text="Agent List")
         self.agent_listbox_label.pack()
-        self.agent_listbox_label.place(x=450, y=215)
-        
+        self.agent_listbox_label.place(x=450, y=220)
+                
         self.agent_listbox = tk.Listbox(root, width=40, height=10)
         self.agent_listbox.pack()
         self.agent_listbox.place(x=450, y=200)
+
 
     def get_current_workflow(self):
         # If tasks is supposed to come from somewhere else in your class, update this method to use that.
@@ -214,13 +217,13 @@ class TaskBoardGUI:
     def build_tree_from_instructions(self, instructions, parent=None):
         for instruction in instructions:
             node_value, children = instruction[0], instruction[1:]
-            current_node = Node(node_value, parent=parent)
+            current_node = ttk.Node(node_value, parent=parent)
             if children:
                 self.build_tree_from_instructions(children, parent=current_node)
 
     def visualize_tree(self):
         # Visualizing the tree using RenderTree
-        for pre, fill, node in RenderTree(self.root):
+        for pre, fill, node in ttk.RenderTree(self.root):
             print("%s%s" % (pre, node.name))
 
     def refresh_agents_status(self):

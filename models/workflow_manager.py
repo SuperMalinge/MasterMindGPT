@@ -20,6 +20,7 @@ class WorkflowManager:
         processed_input = self.preprocess_chat_input(chat_input)
         self.retrieve_assistant_agent_planner.reset()
         logger.log_to_widget(f"Initiated workflow with input: {processed_input}")
+        print("Initiated workflow with input:", processed_input)
         self.retrieve_user_proxy_agent.initiate_chat(self.retrieve_assistant_agent_planner, problem=processed_input)    
         job = {
             "Team": "1 Planner",

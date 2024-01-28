@@ -3,9 +3,12 @@ from gui.task_board_gui import TaskBoardGUI
 from models.workflow_manager import WorkflowManager
 from data.job_management_system import JobManagementSystem
 from gui.game_planning_gui import GamePlanningGUI
+from models.logger import Logger
 import json
-
 from openai import OpenAI
+
+logger = Logger(chat_output=None)
+
 client = OpenAI(base_url="http://localhost:5001/v1", api_key="not-needed")
 
 llm_config = [
@@ -25,7 +28,7 @@ if __name__ == "__main__":
     master = []
     task = []
     team = []
-
+    
     task_board_gui = TaskBoardGUI(root, game, chat_input, company, master, llm_config,task, team)
     job_management_system = JobManagementSystem(root, task_board_gui.Job_listbox, task_board_gui)
     task_board_gui.job_management_system = job_management_system
