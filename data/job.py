@@ -1,18 +1,17 @@
 from typing import Optional
 
 class Job:
-    def __init__(self, team, description, status='not solved', subjob=None):
+    def __init__(self, team: str, description: str, status: str = 'not solved', subjob: Optional[str] = None):
         self.team = team
         self.description = description
         self.status = status
         self.subjob = subjob
-        team: str
-        description: str
-        status: str = 'not solved'
-        subjob: Optional[str] = None
-        question: Optional[str] = None
-        ask_question: Optional[str] = None
-        suggestion1: Optional[str] = None
-        suggestion2: Optional[str] = None
-        own_suggestion: Optional[str] = None
-        scratch_question: Optional[str] = None
+        self.question = None
+        self.ask_question = None
+        self.suggestion1 = None
+        self.suggestion2 = None
+        self.own_suggestion = None
+        self.scratch_question = None
+
+
+
