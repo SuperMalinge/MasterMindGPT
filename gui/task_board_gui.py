@@ -7,8 +7,6 @@ from models.ceo import CEO
 from models.agent_actions import Agent_actions
 from gui.game_planning_gui import GamePlanningGUI
 
-# Import other necessary modules and classes
-
 class TaskBoardGUI:
     def __init__(self, root, game, chat_input, company, master, llm_config, team, task):
         self.root = root
