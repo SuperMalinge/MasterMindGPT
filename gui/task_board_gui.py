@@ -7,6 +7,15 @@ from models.ceo import CEO
 from models.agent_actions import Agent_actions
 from gui.game_planning_gui import GamePlanningGUI
 
+llm_config = [
+    {
+        "model": "mistralai_mistral-7b-instruct-v0.2",
+        "api_base": "http://127.0.0.1:5001/v1",
+        "api_type": "open_ai",
+        "api_key": "sk-111111111111111111111111111111111111111111111111",
+    }
+]
+
 class TaskBoardGUI:
     def __init__(self, root, game, chat_input, company, master, llm_config, team, task):
         self.root = root
@@ -153,7 +162,7 @@ class TaskBoardGUI:
         question_count = sum('questions' in Job['Job'].lower() for Job in self.Jobs)
         self.get_questions_button.config(text=f"Get Questions ({question_count})")
         for Job in self.Job:
-            if 'questions' in task['Job'].lower():
+            if 'questions' in self.task['Job'].lower():
                 self.chat_output.insert(tk.END, f"Question: {Job['Job']}, Ask Question: {Job['Ask Question']}, Suggestion 1: {Job['Suggestion 1']}, Suggestion 2: {Job['Suggestion 2']}, Own Suggestion: {Job['Own Suggestion']}, Scratch Question: {Job['Scratch Question']}")
 
     def get_current_workflow(self):

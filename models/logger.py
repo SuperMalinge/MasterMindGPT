@@ -1,3 +1,5 @@
+import tkinter as tk
+
 class Logger:
     def __init__(self, chat_output):
         self.chat_output = chat_output
