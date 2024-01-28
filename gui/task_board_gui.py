@@ -36,9 +36,7 @@ class TaskBoardGUI:
         self.agent_actions = Agent_actions(task, team)
         self.team = team
         self.task = task
-                
-
-        # Button to add Job
+                      
         # Display the Job list 
         self.Job_listbox = tk.Listbox(root, width=80)  # Adjust the width here
         self.Job_listbox.pack()
