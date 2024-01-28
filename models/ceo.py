@@ -23,7 +23,7 @@ class CEO:
             return
 
         # Delegate task to the appropriate agent based on job team
-        agent = self.agents.get(job.team)
+        agent = self.agents.get(job['team'])
         if agent:
             agent.handle_task(job)
             self.report_task_delegation(job)

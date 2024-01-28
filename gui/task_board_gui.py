@@ -6,6 +6,8 @@ from models.workflow_manager import WorkflowManager
 from models.ceo import CEO
 from models.agent_actions import Agent_actions
 from gui.game_planning_gui import GamePlanningGUI
+from tkinter import ttk
+
 
 llm_config = [
     {
@@ -190,7 +192,7 @@ class TaskBoardGUI:
 
     def create_treeview(self, parent):
         # Create the treeview
-        self.tree = Treeview(parent)
+        self.tree = ttk.Treeview(parent)
         self.tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         # Create the treeview scrollbar
