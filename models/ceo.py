@@ -1,10 +1,14 @@
 from models.logger import Logger
+import tkinter as tk
 
 class CEO:
-    def __init__(self):
+    def __init__(self, agent_listbox):
         self.agents = {}
         self.jobs = []
-
+        # Create an instance of CEO
+        #self.ceo_boss = CEO(self.agent_listbox)
+        self.agent_listbox = agent_listbox
+                
     def initiate_workflow(self, message):
         if message == "start the workflow":
             # Filter only those tasks that belong to the '1 Planner' team
@@ -12,10 +16,15 @@ class CEO:
             for job in planner_tasks:
                 self.delegate_task(job)
 
-    def add_agent(self, agent):
+    def add_agent(self, agent): 
+        logger = Logger(self.chat_output)       
         self.agents[agent.name] = agent
-
-    def delegate_task(self, job):        
+        print(f"Added agent {agent.name} to CEO's list of agents.")
+        logger.log_to_widget(f"Added agent {agent.name} to CEO's list of agents.")
+        self.agent_listbox.insert(tk.END, agent.name)  # Add this line
+        
+    def delegate_task(self, job):
+              
         print(f"Delegating task: {job}")  # Print a message
         if not self.agents:
             print("No agents available")
@@ -31,15 +40,18 @@ class CEO:
         else:
             print(f"No matching agent found for team {job['Team']}.")
             Logger.log_to_widget(f"No matching agent found for team {job['Team']}.")
+            print("Available agents:", self.agents.keys())
+            Logger.log_to_widget(f"Available agents: {self.agents.keys()}")
 
     def report_task_delegation(self, job):
         print(f"Delegated task '{job.description}' to {job['Team']}.")
         Logger.log_to_widget(f"Delegated task '{job.description}' to {job['Team']}.")
-        # In a GUI application, reporting could be updating a text field, or popping up a message
-
+        
     def report_tasks_status(self):
         status_report = {agent_name: agent.report_status() for agent_name, agent in self.agents.items()}
         return status_report
 
     def add_job(self, job):
         self.jobs.append(job)
+        print(f"Added job {job.description} to CEO's list of jobs.")
+        Logger.log_to_widget(f"Added job {job.description} to CEO's list of jobs.")

@@ -5,14 +5,15 @@ from models.ceo import CEO
 from models.agent_actions import Agent_actions
 from autogen.agentchat.contrib.retrieve_assistant_agent import RetrieveAssistantAgent
 from autogen.agentchat.contrib.retrieve_user_proxy_agent import RetrieveUserProxyAgent
+import os
 
 class WorkflowManager:
-    def __init__(self, llm_config, chat_output, job_management_system, ceo_boss):
+    def __init__(self, llm_config, chat_output, job_management_system, ceo_boss, agent_listbox):
         self.llm_config = llm_config
         self.chat_output = chat_output        
         self.job_management_system = job_management_system
         self.ceo_boss = ceo_boss                
-        self.initialize_rag_agents(ceo_boss)
+        self.initialize_rag_agents(ceo_boss,agent_listbox)
 
     def initiate_workflow(self, chat_input):
         # Create an instance of Logger        
@@ -50,10 +51,10 @@ class WorkflowManager:
     def preprocess_chat_input(self, chat_input):
         return chat_input
 
-    def initialize_rag_agents(self, ceo_boss):
+    def initialize_rag_agents(self, ceo_boss, agent_listbox):
         print("Initializing RAG agents with llm_config:", self.llm_config)
-        docs_directory = r"D:\Pythonprojects\Projects\MasterMindGITHUBAUTOGEN\docs"
-        self.ceo_boss = CEO()
+        docs_directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'docs')
+        self.ceo_boss = CEO(agent_listbox)
         try:
             self.retrieve_assistant_agent_planner = RetrieveAssistantAgent(
                 name="Planner Agent",

@@ -44,6 +44,7 @@ class TaskBoardGUI:
         self.agent_actions = Agent_actions(task, team, self.chat_output)
         self.team = team
         self.task = task
+        agent_listbox = None
                       
         # Display the Job list 
         self.Job_listbox = tk.Listbox(root, width=80)  # Adjust the width here
@@ -52,7 +53,7 @@ class TaskBoardGUI:
 
         #initialize the classes
         self.job_management_system = JobManagementSystem(root,self.Job_listbox, self)
-        self.workflow_manager = WorkflowManager(llm_config, self.chat_output, self.job_management_system, self.ceo_boss)
+        self.workflow_manager = WorkflowManager(llm_config, self.chat_output, self.job_management_system, self.ceo_boss, agent_listbox)
         self.agent_actions = Agent_actions(self.task, self.team, self.chat_output)
         #self.agent_actions = Agent_actions(team, task)
         self.GamePlanningGUI = GamePlanningGUI(root)

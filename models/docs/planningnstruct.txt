@@ -1,0 +1,9 @@
+Plan the development of a new game.
+
+Game Type: {game_type}
+Game Genre: {game_genre}
+Programming Language: {programming_language}
+
+Your task is to create a detailed plan for the development of the game, taking into account the selected game type, genre, and programming language. Include an overall structure that outlines the key steps and milestones in the game development process, with a focus on how to start coding the game in the specified programming language.
+
+The final output should be a comprehensive plan that serves as a guide for the development team.
