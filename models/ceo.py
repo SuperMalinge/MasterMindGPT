@@ -23,17 +23,18 @@ class CEO:
             return
 
         # Delegate task to the appropriate agent based on job team
-        agent = self.agents.get(job.team)
+        agent = self.agents.get(job['Team'])
+        #agent = self.agents.get(job.team)
         if agent:
             agent.handle_task(job)
             self.report_task_delegation(job)
         else:
-            print(f"No matching agent found for team {job.team}.")
-            Logger.log_to_widget(f"No matching agent found for team {job.team}.")
+            print(f"No matching agent found for team {job['Team']}.")
+            Logger.log_to_widget(f"No matching agent found for team {job['Team']}.")
 
     def report_task_delegation(self, job):
-        print(f"Delegated task '{job.description}' to {job.team}")
-        Logger.log_to_widget(f"Delegated task '{job.description}' to {job.team}")
+        print(f"Delegated task '{job.description}' to {job['Team']}.")
+        Logger.log_to_widget(f"Delegated task '{job.description}' to {job['Team']}.")
         # In a GUI application, reporting could be updating a text field, or popping up a message
 
     def report_tasks_status(self):

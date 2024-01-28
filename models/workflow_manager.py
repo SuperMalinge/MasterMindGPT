@@ -28,7 +28,7 @@ class WorkflowManager:
             "Status": "unsolved",
             "SubJob": None
         }        
-        print(job['Job had to be added'])  # Print the job description
+        print(job)  # Print the job description
         self.ceo_boss.delegate_task(job)
         self.job_management_system.Jobs.append(job)
         self.job_management_system.update_Job_list()
