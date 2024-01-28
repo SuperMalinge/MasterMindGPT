@@ -15,8 +15,8 @@ class CEO:
     def add_agent(self, agent):
         self.agents[agent.name] = agent
 
-    def delegate_task(self, job):
-        # Check if there are any agents available
+    def delegate_task(self, job):        
+        print(f"Delegating task: {job}")  # Print a message
         if not self.agents:
             print("No agents available")
             Logger.log_to_widget("No agents available")

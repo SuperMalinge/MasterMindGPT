@@ -41,7 +41,7 @@ class TaskBoardGUI:
         self.scratch_question_entry = None   
         company = "MasterMindGPT Game Maker"    
         self.company = company        
-        self.agent_actions = Agent_actions(task, team)
+        self.agent_actions = Agent_actions(task, team, self.chat_output)
         self.team = team
         self.task = task
                       
@@ -53,7 +53,7 @@ class TaskBoardGUI:
         #initialize the classes
         self.job_management_system = JobManagementSystem(root,self.Job_listbox, self)
         self.workflow_manager = WorkflowManager(llm_config, self.chat_output, self.job_management_system, self.ceo_boss)
-        self.agent_actions = Agent_actions(self.task, self.team)
+        self.agent_actions = Agent_actions(self.task, self.team, self.chat_output)
         #self.agent_actions = Agent_actions(team, task)
         self.GamePlanningGUI = GamePlanningGUI(root)
         self.ceo_boss = CEO()

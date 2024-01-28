@@ -1,11 +1,11 @@
 from models.logger import Logger
 
 class Agent_actions:
-    def __init__(self, name, team):
+    def __init__(self, name, team, chat_output):
         self.name = name
         self.team = team
         self.tasks = []
-        self.logger = Logger()
+        self.logger = Logger(chat_output)
 
     def handle_task(self, task):
         self.tasks.append(task)
