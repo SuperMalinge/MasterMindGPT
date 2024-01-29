@@ -17,10 +17,10 @@ class CEO:
                 self.delegate_task(job)
 
     def add_agent(self, agent): 
-        logger = Logger(self.chat_output)       
+             
         self.agents[agent.name] = agent
         print(f"Added agent {agent.name} to CEO's list of agents.")
-        logger.log_to_widget(f"Added agent {agent.name} to CEO's list of agents.")
+        #Logger.log_to_widget(f"Added agent {agent.name} to CEO's list of agents.")
         self.agent_listbox.insert(tk.END, agent.name)  # Add this line
         
     def delegate_task(self, job):

@@ -51,14 +51,9 @@ class TaskBoardGUI:
         self.Job_listbox.pack()
         self.Job_listbox.place(x=450, y=30)
 
-        #initialize the classes
+        # initialize the job management system
         self.job_management_system = JobManagementSystem(root,self.Job_listbox, self)
-        self.workflow_manager = WorkflowManager(llm_config, self.chat_output, self.job_management_system, self.ceo_boss, agent_listbox)
-        self.agent_actions = Agent_actions(self.task, self.team, self.chat_output)
-        #self.agent_actions = Agent_actions(team, task)
-        self.GamePlanningGUI = GamePlanningGUI(root)
-        self.ceo_boss = CEO()
-        
+            
         self.add_Job_button = tk.Button(root, text="Add Job", command=self.job_management_system.open_Job_window)
         self.add_Job_button.pack()
         self.add_Job_button.place(x=450, y=0)
@@ -73,6 +68,9 @@ class TaskBoardGUI:
         
         self.add_question_button.pack()
         self.add_question_button.place(x=580, y=0)
+
+        # initialize the game planning gui
+        self.GamePlanningGUI = GamePlanningGUI(root)  
 
         # Button to get Plan
         self.get_plan_button = tk.Button(root, text="Get Plan", command=self.GamePlanningGUI.open_plan_window)
@@ -131,6 +129,11 @@ class TaskBoardGUI:
         self.agent_listbox.pack()
         self.agent_listbox.place(x=450, y=200)
 
+        # Initialize the classes
+        self.ceo_boss = CEO(self.agent_listbox)        
+        self.workflow_manager = WorkflowManager(llm_config, self.chat_output, self.job_management_system, self.ceo_boss, self.agent_listbox)
+        self.agent_actions = Agent_actions(self.task, self.team, self.chat_output)
+             
 
     def get_current_workflow(self):
         # If tasks is supposed to come from somewhere else in your class, update this method to use that.
