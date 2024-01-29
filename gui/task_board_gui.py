@@ -130,7 +130,7 @@ class TaskBoardGUI:
         self.agent_listbox.place(x=450, y=200)
 
         # Initialize the classes
-        self.ceo_boss = CEO(self.agent_listbox)        
+        self.ceo_boss = CEO(self.agent_listbox)              
         self.workflow_manager = WorkflowManager(llm_config, self.chat_output, self.job_management_system, self.ceo_boss, self.agent_listbox)
         self.agent_actions = Agent_actions(self.task, self.team, self.chat_output)
              
@@ -246,7 +246,7 @@ class TaskBoardGUI:
     def send_chat_input(self):
         chat_input = self.chat_input.get()
         if chat_input: 
-            workflow_manager = WorkflowManager(llm_config, self.chat_output, self.job_management_system, self.ceo_boss)           
+            workflow_manager = WorkflowManager(llm_config, self.chat_output, self.job_management_system, self.ceo_boss, self.agent_listbox)           
             threading.Thread(target=workflow_manager.initiate_workflow, args=(chat_input,)).start()
         else:
             tk.messagebox.showerror("Error", "Please enter a Job to initiate the workflow")

@@ -7,7 +7,7 @@ from autogen.agentchat.contrib.retrieve_assistant_agent import RetrieveAssistant
 from autogen.agentchat.contrib.retrieve_user_proxy_agent import RetrieveUserProxyAgent
 import os
 
-class WorkflowManager:
+class WorkflowManager:    
     def __init__(self, llm_config, chat_output, job_management_system, ceo_boss, agent_listbox):
         self.llm_config = llm_config
         self.chat_output = chat_output        
@@ -80,7 +80,8 @@ class WorkflowManager:
                 },
             )
             print("CEO Proxy Agent (RetrieveUserProxyAgent) initialized successfully.")
-            # Immediately add the agent to the CEO's list            
+            # Immediately add the agent to the CEO's list
+            self.ceo_boss.add_agent(self.retrieve_user_proxy_agent)                        
         except Exception as e:
             print("Error during RAG agents initialization:", e)
             raise
