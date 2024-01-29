@@ -131,7 +131,7 @@ class TaskBoardGUI:
 
         # Initialize the classes
         self.ceo_boss = CEO(self.agent_listbox)              
-        self.workflow_manager = WorkflowManager(llm_config, self.chat_output, self.job_management_system, self.ceo_boss, self.agent_listbox)
+        #self.workflow_manager = WorkflowManager(llm_config, self.chat_output, self.job_management_system, self.ceo_boss, self.agent_listbox)
         self.agent_actions = Agent_actions(self.task, self.team, self.chat_output)
              
 
