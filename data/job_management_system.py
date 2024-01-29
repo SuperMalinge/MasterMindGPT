@@ -24,15 +24,16 @@ class JobManagementSystem:
         self.selected_current_workflow = None
         self.selected_question_count = None
         self.task_board_gui = task_board_gui
+        self.logger = Logger(chat_output=None)
 
     def update_job_list(self):
         self.Job_listbox.delete(0, tk.END)
-        for job in self.Jobs:
-            job_details = f"Team: {job.team}, Job: {job.description}, Status: {job.status}"
+        for job in self.Jobs:            
+            job_details = f"Team: {job['team']}, Job: {job['description']}, Status: {job['status']}"            
             if job.subjob:
-                job_details += f", SubJob: {job.subjob}"
+                job_details += f", SubJob: {job['subjob']}"
             self.Job_listbox.insert(tk.END, job_details)
-
+        
     def update_Job_count(self):
         Job_count = len(self.Jobs)
         self.add_Job_button.config(text=f"Add Job ({Job_count})")
@@ -135,8 +136,8 @@ class JobManagementSystem:
         if team and job_description:
             new_job = Job(team=team, description=job_description, status=status, subjob=subjob)
             self.Jobs.append(new_job)
-            self.update_job_list()
-            self.task_board_gui.chat_output.insert(tk.END, "A new Job has been added: " + str(new_job) + "\n")
+            self.update_job_list()            
+            self.logger.log_to_widget("A new Job has been added: " + str(new_job) + "\n")
             job_window.destroy()
         else:
             tk.messagebox.showerror("Error", "Please fill in all fields")

@@ -19,21 +19,29 @@ class WorkflowManager:
         # Create an instance of Logger        
         logger = Logger(self.chat_output)
         processed_input = self.preprocess_chat_input(chat_input)
-        self.retrieve_assistant_agent_planner.reset()
-        logger.log_to_widget(f"Initiated workflow with input: {processed_input}")
-        print("Initiated workflow with input:", processed_input)
-        self.retrieve_user_proxy_agent.initiate_chat(self.retrieve_assistant_agent_planner, problem=processed_input)    
+
+        # Create the job
         job = {
             "Team": "1 Planner",
             "Job": processed_input,
             "Status": "unsolved",
             "SubJob": None
         }        
-        print(job)  # Print the job description
+
+        # Delegate the task and add the job
         self.ceo_boss.delegate_task(job)
-        self.job_management_system.Jobs.append(job)
-        self.job_management_system.update_Job_list()
+        print("Delegated task:", job)
+        self.job_management_system.Jobs.append(job)    
+        print("Added job:", job)    
+        self.job_management_system.update_job_list()
+        print("Updated job list")
         logger.log_to_widget(f"Delegated to Planner: {processed_input}")
+
+        # Reset the planner and initiate the chat
+        self.retrieve_assistant_agent_planner.reset()
+        logger.log_to_widget(f"Initiated workflow with input: {processed_input}")
+        print("Initiated workflow with input:", processed_input)
+        self.retrieve_user_proxy_agent.initiate_chat(self.retrieve_assistant_agent_planner, problem=processed_input)    
 
     def process_chat_input(self, chat_input):
         processed_input = self.preprocess_chat_input(chat_input)

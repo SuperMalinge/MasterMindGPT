@@ -41,7 +41,7 @@ class CEO:
             print(f"No matching agent found for team {job['Team']}.")
             #Logger.log_to_widget(f"No matching agent found for team {job['Team']}.")
             print("Available agents:", self.agents.keys())
-            Logger.log_to_widget(f"Available agents: {self.agents.keys()}")
+            #Logger.log_to_widget(f"Available agents: {self.agents.keys()}")
 
     def report_task_delegation(self, job):
         print(f"Delegated task '{job.description}' to {job['Team']}.")
