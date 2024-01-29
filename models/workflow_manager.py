@@ -53,8 +53,7 @@ class WorkflowManager:
 
     def initialize_rag_agents(self, ceo_boss, agent_listbox):
         print("Initializing RAG agents with llm_config:", self.llm_config)
-        docs_directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'docs')
-        self.ceo_boss = CEO(agent_listbox)
+        docs_directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'docs')        
         try:
             self.retrieve_assistant_agent_planner = RetrieveAssistantAgent(
                 name="Planner Agent",
