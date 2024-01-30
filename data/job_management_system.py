@@ -30,7 +30,6 @@ class JobManagementSystem:
         from gui.task_board_gui import Logger
         self.logger = Logger(chat_output)  
           
-
     def update_Job_count(self):
         Job_count = len(self.Jobs)
         self.add_Job_button.config(text=f"Add Job ({Job_count})")
@@ -98,7 +97,7 @@ class JobManagementSystem:
         self.selected_team = selected_team  
         team_entry = tk.OptionMenu(job_window, selected_team, *teams)
         team_entry.pack()
-
+        
         job_description_label = tk.Label(job_window, text="Job Description:")
         job_description_label.pack()
         self.job_description_entry = tk.Entry(job_window)

@@ -16,8 +16,7 @@ class CEO:
             for job in planner_tasks:
                 self.delegate_task(job)
 
-    def add_agent(self, agent): 
-                    
+    def add_agent(self, agent):                     
         self.agents[agent.name] = agent
         print(f"Added agent {agent.name} to CEO's list of agents.")
         self.logger.log_to_widget(f"Added agent {agent.name} to CEO's list of agents.")
@@ -42,8 +41,7 @@ class CEO:
             print("Available agents:", self.agents.keys())
             self.logger.log_to_widget(f"Available agents: {self.agents.keys()}")
 
-    def report_task_delegation(self, job):
-       
+    def report_task_delegation(self, job):       
         print(f"Delegated task '{job.description}' to {job['Team']}.")
         self.logger.log_to_widget(f"Delegated task '{job.description}' to {job['Team']}.")
         
