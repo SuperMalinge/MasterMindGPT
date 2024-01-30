@@ -41,7 +41,7 @@ class TaskBoardGUI:
         self.company = company  
         self.team = team
         self.task = task
-        agent_listbox = None
+        #agent_listbox = None
 
         # Display the chat output
         self.chat_output = tk.Text(root, height=20, width=40)  # Text widget for chat output
@@ -95,8 +95,7 @@ class TaskBoardGUI:
         # button to train the agents in the teams
         self.train_button = tk.Button(root, text="Train Agents", command=self.open_train_agents_window)
         self.train_button.pack()
-        self.train_button.place(x=1020, y=0)
- 
+        self.train_button.place(x=1020, y=0) 
 
         # Create the Logger instance
         self.logger = Logger(self.chat_output)
@@ -129,10 +128,7 @@ class TaskBoardGUI:
         # Initialize the classes
         self.ceo_boss = CEO(self.agent_listbox, self.chat_output)              
         #self.workflow_manager = WorkflowManager(llm_config, self.chat_output, self.job_management_system, self.ceo_boss, self.agent_listbox)
-        self.agent_actions = Agent_actions(self.task, self.team, self.chat_output) 
-        
-
-                    
+        self.agent_actions = Agent_actions(self.task, self.team, self.chat_output)                            
 
     def get_current_workflow(self):
         # If tasks is supposed to come from somewhere else in your class, update this method to use that.
@@ -250,7 +246,6 @@ class TaskBoardGUI:
         else:
             tk.messagebox.showerror("Error", "Please enter a Job to initiate the workflow")
 
-
     def open_question_window(self):
         question_window = tk.Toplevel(self.root)
         question_window.title("Questions")
@@ -261,7 +256,6 @@ class TaskBoardGUI:
         question_entry.pack()
         question_button = tk.Button(question_window, text="Get Questions", command=lambda: self.get_questions_output(question_window))
         question_button.pack()            
-
 
 class Logger:
     def __init__(self, chat_output):

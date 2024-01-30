@@ -6,7 +6,6 @@ class GamePlanningGUI:
         from gui.task_board_gui import Logger
         self.logger = Logger(chat_output)       
         
-
     def create_widgets(self, window):
         # Game Name
         game_name_label = tk.Label(window, text="Game Name:")

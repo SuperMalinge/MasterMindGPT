@@ -3,8 +3,7 @@ import tkinter as tk
 class CEO:
     def __init__(self, agent_listbox, chat_output):
         self.agents = {}
-        self.jobs = []
-        # Create an instance of CEO
+        self.jobs = []        
         #self.ceo_boss = CEO(self.agent_listbox)
         self.agent_listbox = agent_listbox
         from gui.task_board_gui import Logger
