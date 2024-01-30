@@ -17,8 +17,7 @@ class WorkflowManager:
         self.logger = Logger(chat_output)          
         self.initialize_rag_agents(ceo_boss,agent_listbox)
 
-    def initiate_workflow(self, chat_input):
-        
+    def initiate_workflow(self, chat_input):        
         processed_input = self.preprocess_chat_input(chat_input)
         # Create the job
         job = {
@@ -98,10 +97,10 @@ class WorkflowManager:
             # We cant add the CEO proxy agent to the CEO list since he is the one who adds agents to the list
             #therefore we add him to the agent listbox
             agent_listbox.insert(tk.END, self.retrieve_user_proxy_agent.name)  # Add this line
-
                                   
         except Exception as e:
             print("Error during RAG agents initialization:", e)
+            self.logger.log_to_widget(f"Error during RAG agents initialization: {e}")
             raise
 
     def start_chat_flow(self, chat_input):
