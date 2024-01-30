@@ -1,10 +1,11 @@
 import tkinter as tk
-from models.logger import Logger
 
 class GamePlanningGUI:
-    def __init__(self, root):
-        self.root = root
-        #self.create_widgets(self.root)
+    def __init__(self, root, chat_output):
+        self.root = root   
+        from gui.task_board_gui import Logger
+        self.logger = Logger(chat_output)       
+        
 
     def create_widgets(self, window):
         # Game Name
@@ -41,8 +42,8 @@ class GamePlanningGUI:
         plan_window.geometry("500x700")  
         self.create_widgets(plan_window)
 
-    def get_plan_output(self, plan_window):
-        Logger.log_to_widget(f"Plan: {self.game_name_entry.get()}")        
+    def get_plan_output(self, plan_window):               
+        self.logger.log_to_widget(f"Plan: {self.game_name_entry.get()}")        
         self.game_name_entry.delete(0, tk.END)
         plan_window.destroy()
 

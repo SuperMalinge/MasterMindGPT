@@ -1,9 +1,8 @@
 import tkinter as tk
 from data.job import Job  
-from models.logger import Logger
 
 class JobManagementSystem:
-    def __init__(self, root, Job_listbox, task_board_gui):
+    def __init__(self, root, Job_listbox, task_board_gui, chat_output):
         self.root = root
         self.Job_listbox = Job_listbox
         self.Jobs = []
@@ -24,16 +23,14 @@ class JobManagementSystem:
         self.selected_current_workflow = None
         self.selected_question_count = None
         self.task_board_gui = task_board_gui
-        self.logger = Logger(chat_output=None)
+        self.selected_team = tk.StringVar()
+        self.job_description_entry = tk.Entry()
+        self.selected_status = tk.StringVar()
+        self.subjob_entry = tk.Entry()
+        from gui.task_board_gui import Logger
+        self.logger = Logger(chat_output)  
+          
 
-    def update_job_list(self):
-        self.Job_listbox.delete(0, tk.END)
-        for job in self.Jobs:            
-            job_details = f"Team: {job['team']}, Job: {job['description']}, Status: {job['status']}"            
-            if job.subjob:
-                job_details += f", SubJob: {job['subjob']}"
-            self.Job_listbox.insert(tk.END, job_details)
-        
     def update_Job_count(self):
         Job_count = len(self.Jobs)
         self.add_Job_button.config(text=f"Add Job ({Job_count})")
@@ -48,7 +45,6 @@ class JobManagementSystem:
             tk.messagebox.showerror("Error", "Please select a Job")
 
     def add_question(self, question_window):
-
         question_label = tk.Label(question_window, text="Question:")
         question_label.pack()
         self.question_entry = tk.Entry(question_window)
@@ -127,28 +123,45 @@ class JobManagementSystem:
         add_task_button = tk.Button(job_window, text="Add Job", command=lambda: self.add_job(job_window))
         add_task_button.pack()
 
-    def add_job(self, job_window):
+    def add_job(self, job_window):        
         team = self.selected_team.get()
+        if not team:
+            tk.messagebox.showerror("Error", "Please enter a value for the team")
+            return
+
         job_description = self.job_description_entry.get()
         status = self.selected_status.get()
         subjob = self.subjob_entry.get()
+        new_job = Job(team, job_description, status, subjob)
+        self.Jobs.append(new_job)
+        self.Job_listbox.delete(0, tk.END)
+        self.update_job_list()        
+        team = self.selected_team.get()
+        job_description = self.job_description_entry.get()
+        status = self.selected_status.get()
+        subjob = self.subjob_entry.get()        
+        self.logger.log_to_widget("A new Job has been added: " + str(new_job) + "\n")
 
-        if team and job_description:
-            new_job = Job(team=team, description=job_description, status=status, subjob=subjob)
-            self.Jobs.append(new_job)
-            self.update_job_list()            
-            self.logger.log_to_widget("A new Job has been added: " + str(new_job) + "\n")
-            job_window.destroy()
-        else:
-            tk.messagebox.showerror("Error", "Please fill in all fields")
+    def update_job_list(self):
+        self.Job_listbox.delete(0, tk.END)
+        for job in self.Jobs:   
+            job_dict = dict(job)         
+            job_details = f"Team: {job_dict['team']}, Job: {job_dict['description']}, Status: {job_dict['status']}"           
+            if job.subjob:
+                job_details += f", SubJob: {job_dict['subjob']}"
+            self.Job_listbox.insert(tk.END, job_details)
 
-    def open_question_window(self):
-        question_window = tk.Toplevel(self.root)
-        question_window.title("Questions")
-        question_window.geometry("500x700")
-        question_label = tk.Label(question_window, text="Questions:")
-        question_label.pack()
-        question_entry = tk.Entry(question_window)
-        question_entry.pack()
-        question_button = tk.Button(question_window, text="Get Questions", command=lambda: self.get_questions_output(question_window))
-        question_button.pack()
+class Job:
+    def __init__(self, team, description, status, subjob=None):
+        self.team = team
+        self.description = description
+        self.status = status
+        self.subjob = subjob
+
+    def __iter__(self):
+        # Correctly yield key-value pairs
+        yield ('team', self.team)
+        yield ('description', self.description)
+        yield ('status', self.status)
+        if self.subjob is not None:
+            yield ('subjob', self.subjob)

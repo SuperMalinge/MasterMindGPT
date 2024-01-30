@@ -1,6 +1,5 @@
 import tkinter as tk, tkinter.ttk as ttk
 import threading
-from models.logger import Logger
 from data.job_management_system import JobManagementSystem
 from models.workflow_manager import WorkflowManager
 from models.ceo import CEO
@@ -21,8 +20,7 @@ class TaskBoardGUI:
         self.root = root
         self.root.title("MasterMindGPT Job Board")
         self.Job = []
-        self.Jobs = []     
-        self.chat_output = []           
+        self.Jobs = []                     
         self.llm_config = llm_config  # This assumes llm_config is passed in during instantiation               
 
         # Create attributes for Job-related widgets
@@ -40,19 +38,22 @@ class TaskBoardGUI:
         self.own_suggestion_entry = None
         self.scratch_question_entry = None   
         company = "MasterMindGPT Game Maker"    
-        self.company = company        
-        self.agent_actions = Agent_actions(task, team, self.chat_output)
+        self.company = company  
         self.team = team
         self.task = task
         agent_listbox = None
+
+        # Display the chat output
+        self.chat_output = tk.Text(root, height=20, width=40)  # Text widget for chat output
+        self.chat_output.pack(side=tk.LEFT)    
+        self.chat_output.place(x=100, y=0)   
                       
         # Display the Job list 
         self.Job_listbox = tk.Listbox(root, width=80)  # Adjust the width here
         self.Job_listbox.pack()
         self.Job_listbox.place(x=450, y=30)
 
-        # initialize the job management system
-        self.job_management_system = JobManagementSystem(root,self.Job_listbox, self)
+        self.job_management_system = JobManagementSystem(root,self.Job_listbox, self, self.chat_output)
             
         self.add_Job_button = tk.Button(root, text="Add Job", command=self.job_management_system.open_Job_window)
         self.add_Job_button.pack()
@@ -70,7 +71,7 @@ class TaskBoardGUI:
         self.add_question_button.place(x=580, y=0)
 
         # initialize the game planning gui
-        self.GamePlanningGUI = GamePlanningGUI(root)  
+        self.GamePlanningGUI = GamePlanningGUI(root, self.chat_output)  
 
         # Button to get Plan
         self.get_plan_button = tk.Button(root, text="Get Plan", command=self.GamePlanningGUI.open_plan_window)
@@ -87,7 +88,7 @@ class TaskBoardGUI:
         self.get_current_workflow_button.pack()
         self.get_current_workflow_button.place(x=800, y=0)
 
-        self.get_questions_button = tk.Button(root, text="Get Questions", command=self.job_management_system.open_question_window)
+        self.get_questions_button = tk.Button(root, text="Get Questions", command=self.open_question_window)
         self.get_questions_button.pack()
         self.get_questions_button.place(x=930, y=0)
 
@@ -95,11 +96,7 @@ class TaskBoardGUI:
         self.train_button = tk.Button(root, text="Train Agents", command=self.open_train_agents_window)
         self.train_button.pack()
         self.train_button.place(x=1020, y=0)
-
-        # Display the chat output
-        self.chat_output = tk.Text(root, height=20, width=40)  # Text widget for chat output
-        self.chat_output.pack(side=tk.LEFT)    
-        self.chat_output.place(x=100, y=0)    
+ 
 
         # Create the Logger instance
         self.logger = Logger(self.chat_output)
@@ -130,10 +127,12 @@ class TaskBoardGUI:
         self.agent_listbox.place(x=450, y=200)
 
         # Initialize the classes
-        self.ceo_boss = CEO(self.agent_listbox)              
+        self.ceo_boss = CEO(self.agent_listbox, self.chat_output)              
         #self.workflow_manager = WorkflowManager(llm_config, self.chat_output, self.job_management_system, self.ceo_boss, self.agent_listbox)
-        self.agent_actions = Agent_actions(self.task, self.team, self.chat_output)
-             
+        self.agent_actions = Agent_actions(self.task, self.team, self.chat_output) 
+        
+
+                    
 
     def get_current_workflow(self):
         # If tasks is supposed to come from somewhere else in your class, update this method to use that.
@@ -250,3 +249,27 @@ class TaskBoardGUI:
             threading.Thread(target=workflow_manager.initiate_workflow, args=(chat_input,)).start()
         else:
             tk.messagebox.showerror("Error", "Please enter a Job to initiate the workflow")
+
+
+    def open_question_window(self):
+        question_window = tk.Toplevel(self.root)
+        question_window.title("Questions")
+        question_window.geometry("500x700")
+        question_label = tk.Label(question_window, text="Questions:")
+        question_label.pack()
+        question_entry = tk.Entry(question_window)
+        question_entry.pack()
+        question_button = tk.Button(question_window, text="Get Questions", command=lambda: self.get_questions_output(question_window))
+        question_button.pack()            
+
+
+class Logger:
+    def __init__(self, chat_output):
+        self.chat_output = chat_output
+
+    def log_to_widget(self, message):
+        if isinstance(self.chat_output, tk.Text):
+            self.chat_output.insert(tk.END, message + "\n")  # Appends a newline after each message
+        else:
+            raise TypeError("chat_output is not a tk.Text widget")
+

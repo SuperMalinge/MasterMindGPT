@@ -1,13 +1,12 @@
-from models.logger import Logger
 
 class Agent_actions:
     def __init__(self, name, team, chat_output):
         self.name = name
         self.team = team
-        self.tasks = []
-        self.logger = Logger(chat_output)
+        self.tasks = []        
 
     def handle_task(self, task):
+        from gui.task_board_gui import Logger
         self.tasks.append(task)
         Logger.log_to_widget(f"{self.name}: received task -> {task}")
         print(f"{self.name}: received task -> {task}")
