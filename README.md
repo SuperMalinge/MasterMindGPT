@@ -1,11 +1,11 @@
 # Update
 
 I'm excited to announce that the code has been updated and the functionality to add jobs to the job board is now working as expected. The next step in our journey is to set up the agents correctly. Stay tuned for more updates!
-* More Graceful Error Handling with Configuration Files 01/2024
 * Improved Job Class 01/2024
 * Improved CEO Class 01/2024
 * refactored and split code 01/2024
 * added the agents to a list on the gui 01/2024
+* added queue function to different tasks 01/2024
 
 # Important
 
