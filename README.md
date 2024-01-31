@@ -99,7 +99,6 @@ Our journey begins with the addition of tasks like these:
 
 **First Team - Planners**: The role of the planners is to plan, create tasks, and gather information. Their purpose is to collect enough information from the user to create a comprehensive plan for how the app should look. They will gather information from the web and from a database. They will add `[question]` to the board and ask the user for additional information. The information will be used to plan out various aspects such as Frontend, Backend, Art, Engine, Logic, etc. The basic plan will consist of tasks and subtasks built from this information.
 
-
 ![task1](https://github.com/SuperMalinge/MasterMindGPT/assets/64928345/df9965b5-6512-4b48-8efd-92d5c89234c8)
 
 adding tasks like these:
