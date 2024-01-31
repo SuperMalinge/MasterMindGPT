@@ -27,9 +27,9 @@ if __name__ == "__main__":
     team = []    
     
     task_board_gui = TaskBoardGUI(root, game, chat_input, company, master, llm_config,task, team)
-    job_management_system = JobManagementSystem(root, task_board_gui.Job_listbox, task_board_gui,task_board_gui.chat_output)
+    job_management_system = JobManagementSystem(root, task_board_gui.Job_listbox, task_board_gui,task_board_gui.chat_output, task_board_gui.task_queue)
     task_board_gui.job_management_system = job_management_system
     game_planning_gui = GamePlanningGUI(root,task_board_gui.chat_output)
-    Workf_lowManager = WorkflowManager(llm_config, task_board_gui.chat_output, job_management_system, task_board_gui.ceo_boss, task_board_gui.agent_listbox)
+    Workf_lowManager = WorkflowManager(llm_config, task_board_gui.chat_output, job_management_system, task_board_gui.ceo_boss, task_board_gui.agent_listbox,task_board_gui.task_queue)
 
     root.mainloop()

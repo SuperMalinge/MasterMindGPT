@@ -5,6 +5,8 @@ from models.workflow_manager import WorkflowManager
 from models.ceo import CEO
 from models.agent_actions import Agent_actions
 from gui.game_planning_gui import GamePlanningGUI
+from queue import Queue, Empty
+import tkinter.messagebox as messagebox
 
 llm_config = [
     {
@@ -42,6 +44,7 @@ class TaskBoardGUI:
         self.team = team
         self.task = task
         #agent_listbox = None
+        self.task_queue = Queue()  # Task queue for thread communication
 
         # Display the chat output
         self.chat_output = tk.Text(root, height=20, width=40)  # Text widget for chat output
@@ -53,7 +56,7 @@ class TaskBoardGUI:
         self.Job_listbox.pack()
         self.Job_listbox.place(x=450, y=30)
 
-        self.job_management_system = JobManagementSystem(root,self.Job_listbox, self, self.chat_output)
+        self.job_management_system = JobManagementSystem(root,self.Job_listbox, self, self.chat_output,self.task_queue)
             
         self.add_Job_button = tk.Button(root, text="Add Job", command=self.job_management_system.open_Job_window)
         self.add_Job_button.pack()
@@ -62,7 +65,7 @@ class TaskBoardGUI:
         # Button to delete Job
         self.delete_Job_button = tk.Button(root, text="Delete Job", command=self.job_management_system.delete_Job)
         self.delete_Job_button.pack()
-        self.delete_Job_button.place(x=510, y=0)
+        self.delete_Job_button.place(x=520, y=0)
 
         # Button to add questions
         self.add_question_button = tk.Button(root, text="Add Question", command=self.add_question_wrapper)       
@@ -117,18 +120,21 @@ class TaskBoardGUI:
         self.send_button.place(x=100, y=350)
 
         # Create the Listbox widget for agents
-        self.agent_listbox_label = tk.Label(root, text="Agent List")
+        self.agent_listbox_label = tk.Label(root, text="Agent List") 
         self.agent_listbox_label.pack()
         self.agent_listbox_label.place(x=450, y=220)
                 
-        self.agent_listbox = tk.Listbox(root, width=40, height=10)
+        self.agent_listbox = tk.Listbox(root, width=40, height=10) # listbox for agents
         self.agent_listbox.pack()
         self.agent_listbox.place(x=450, y=200)
+      
+        # Initialize the classes        
+        self.ceo_boss = CEO(self.agent_listbox, self.chat_output, self.task_queue)
+        self.workflow_manager = WorkflowManager(llm_config, self.chat_output, self.job_management_system, self.ceo_boss, self.agent_listbox, self.task_queue)
+        self.agent_actions = Agent_actions(self.task, self.team, self.chat_output)   
 
-        # Initialize the classes
-        self.ceo_boss = CEO(self.agent_listbox, self.chat_output)              
-        #self.workflow_manager = WorkflowManager(llm_config, self.chat_output, self.job_management_system, self.ceo_boss, self.agent_listbox)
-        self.agent_actions = Agent_actions(self.task, self.team, self.chat_output)                            
+        # Start checking the queue
+        self.check_queue()                         
 
     def get_current_workflow(self):
         # If tasks is supposed to come from somewhere else in your class, update this method to use that.
@@ -240,11 +246,21 @@ class TaskBoardGUI:
          
     def send_chat_input(self):
         chat_input = self.chat_input.get()
-        if chat_input: 
-            workflow_manager = WorkflowManager(llm_config, self.chat_output, self.job_management_system, self.ceo_boss, self.agent_listbox)           
-            threading.Thread(target=workflow_manager.initiate_workflow, args=(chat_input,)).start()
+        if chat_input:
+            threading.Thread(target=self.workflow_manager.initiate_workflow, args=(chat_input,)).start()
         else:
-            tk.messagebox.showerror("Error", "Please enter a Job to initiate the workflow")
+            tk.messagebox.showerror("Error", "Please enter a job to initiate the workflow")
+
+    def check_queue(self):
+        try:
+            job_result = self.task_queue.get(block=False)
+            # Here, handle your retrieved job result. For example:
+            self.Job_listbox.insert(tk.END, job_result)
+        except Empty:            
+            pass
+        finally:
+            self.ceo_boss.process_queue()  # Added call to process the queue
+            self.root.after(100, self.check_queue)  # Schedule to check again
 
     def open_question_window(self):
         question_window = tk.Toplevel(self.root)

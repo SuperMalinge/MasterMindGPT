@@ -1,16 +1,19 @@
 import tkinter as tk
 
+
 class CEO:
-    def __init__(self, agent_listbox, chat_output):
+    def __init__(self, agent_listbox, chat_output, task_queue):
         self.agents = {}
-        self.jobs = []        
-        #self.ceo_boss = CEO(self.agent_listbox)
-        self.agent_listbox = agent_listbox
+        self.jobs = []
+        self.agent_listbox = agent_listbox  # Tkinter Listbox widget for agents
         from gui.task_board_gui import Logger
-        self.logger = Logger(chat_output) 
+        self.logger = Logger(chat_output)
+        self.task_queue = task_queue  # Queue for inter-thread communication
                         
     def initiate_workflow(self, message):
         if message == "start the workflow":
+            print("Starting the workflow...")
+            self.logger.log_to_widget("Starting the workflow...")
             # Filter only those tasks that belong to the '1 Planner' team
             planner_tasks = [job for job in self.jobs if job.team == '1 Planner']
             for job in planner_tasks:
@@ -20,13 +23,23 @@ class CEO:
         self.agents[agent.name] = agent
         print(f"Added agent {agent.name} to CEO's list of agents.")
         self.logger.log_to_widget(f"Added agent {agent.name} to CEO's list of agents.")
-        self.agent_listbox.insert(tk.END, agent.name)  # Add this line
+        #self.agent_listbox.insert(tk.END, agent.name)  # Add this line
+        # Invoke the queue to asynchronously add agent's name to the agent_listbox
+        self.task_queue.put(lambda: self.agent_listbox.insert(tk.END, agent.name))
         
     def delegate_task(self, job):           
         print(f"Delegating task: {job}")  # Print a message
+        self.logger.log_to_widget(f"Delegating task: {job}")  # Print a message
         if not self.agents:
             print("No agents available")
             self.logger.log_to_widget("No agents available")
+            #try to add agents to the list
+            print("Trying to add agents to the list")
+            self.logger.log_to_widget("Trying to add agents to the list")
+            #retrieve the agents from the task board gui agent listbox
+            print("Retrieving agents from the task board gui agent listbox")
+            self.logger.log_to_widget("Retrieving agents from the task board gui agent listbox")
+                    
             return
 
         # Delegate task to the appropriate agent based on job team
@@ -41,6 +54,15 @@ class CEO:
             print("Available agents:", self.agents.keys())
             self.logger.log_to_widget(f"Available agents: {self.agents.keys()}")
 
+    # Add a new method that the main thread can poll, which checks and handles the queue
+    def process_queue(self):
+        while not self.task_queue.empty():
+            try:
+                action = self.task_queue.get(block=False)
+                action()  # Execute the action in the main thread
+            except self.task_queue.empty():
+                pass
+
     def report_task_delegation(self, job):       
         print(f"Delegated task '{job.description}' to {job['Team']}.")
         self.logger.log_to_widget(f"Delegated task '{job.description}' to {job['Team']}.")
@@ -52,4 +74,5 @@ class CEO:
     def add_job(self, job):       
         self.jobs.append(job)
         print(f"Added job {job.description} to CEO's list of jobs.")
-        self.logger.log_to_widget(f"Added job {job.description} to CEO's list of jobs.")
+        self.logger.log_to_widget(f"Added job {job.description} to CEO's list of jobs.")         
+        self.task_queue.put(lambda: self.logger.log_to_widget(f"Added job {job.description} to CEO's list of jobs."))

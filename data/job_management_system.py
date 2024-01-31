@@ -1,8 +1,9 @@
 import tkinter as tk
 from data.job import Job  
+import tkinter.messagebox as messagebox
 
 class JobManagementSystem:
-    def __init__(self, root, Job_listbox, task_board_gui, chat_output):
+    def __init__(self, root, Job_listbox, task_board_gui, chat_output, task_queue):
         self.root = root
         self.Job_listbox = Job_listbox
         self.Jobs = []
@@ -29,20 +30,32 @@ class JobManagementSystem:
         self.subjob_entry = tk.Entry()
         from gui.task_board_gui import Logger
         self.logger = Logger(chat_output)  
+        self.agent_add_job("1 Planner", "test", "not solved", "None")
+        self.task_queue = task_queue
           
     def update_Job_count(self):
+        # Retrieve the current number of jobs
         Job_count = len(self.Jobs)
-        self.add_Job_button.config(text=f"Add Job ({Job_count})")
+        # Update the Job_count attribute of task_board_gui if needed
+        # Assuming task_board_gui is the correct place where this attribute is used
+        if hasattr(self.task_board_gui, 'Job_count'):
+            self.task_board_gui.Job_count = Job_count
+        # Update the Job_count_label widget text if it exists
+        if hasattr(self.task_board_gui, 'Job_count_label'):
+            self.task_board_gui.Job_count_label.config(text=f"Job Count: {Job_count}")
+        # Assume add_Job_button is a button widget in the task_board_gui to add a Job
+        # The text will now always show the number of jobs including zero (e.g., "Add Job (0)")
+        self.task_board_gui.add_Job_button.config(text=f"Add Job ({Job_count})")     
 
     def delete_Job(self):
         try:
             index = self.Job_listbox.curselection()[0]
             self.Job_listbox.delete(index)
             del self.Jobs[index]
-            self.update_Job_list()
+            self.update_job_list()
         except IndexError:
             tk.messagebox.showerror("Error", "Please select a Job")
-
+            
     def add_question(self, question_window):
         question_label = tk.Label(question_window, text="Question:")
         question_label.pack()
@@ -97,7 +110,7 @@ class JobManagementSystem:
         self.selected_team = selected_team  
         team_entry = tk.OptionMenu(job_window, selected_team, *teams)
         team_entry.pack()
-        
+
         job_description_label = tk.Label(job_window, text="Job Description:")
         job_description_label.pack()
         self.job_description_entry = tk.Entry(job_window)
@@ -122,6 +135,7 @@ class JobManagementSystem:
         add_task_button = tk.Button(job_window, text="Add Job", command=lambda: self.add_job(job_window))
         add_task_button.pack()
 
+    # adds a new job to the job listbox in task board gui
     def add_job(self, job_window):        
         team = self.selected_team.get()
         if not team:
@@ -141,6 +155,27 @@ class JobManagementSystem:
         subjob = self.subjob_entry.get()        
         self.logger.log_to_widget("A new Job has been added: " + str(new_job) + "\n")
 
+    def agent_add_job(self, team, job_description, status, subjob):
+        # Create the Job object
+        new_job = Job(team, job_description, status, subjob)
+        # Add Job to the internal list; this operation doesn't interact with GUI, so no queue is needed
+        self.Jobs.append(new_job)
+        # Queue the GUI operation to add the job to the listbox in the main thread        
+        self.add_job_to_listbox(new_job)
+        #here is an example of how to add a job to the job management system
+        #self.job_management_system.agent_add_job("1 Planner", "Plan the game", "not solved", "None")
+
+    def add_job_to_listbox(self, job):
+        if isinstance(job, Job):  # In case job is a Job object            
+            job_str = f"Team: {job.team}, Description: {job.description}, Status: {job.status}, Subjob: {job.subjob}"
+        else:  # In case job is passed as a string or other format handle here
+            job_str = str(job)
+        # update the Job_listbox with the new job
+        self.Job_listbox.insert(tk.END, job_str)
+        # assuming logging to the widget is a thread-safe operation here, adapt if necessary:
+        self.logger.log_to_widget("A new Job has been added: " + job_str + "\n")
+
+    # updates the job listbox in task board gui
     def update_job_list(self):
         self.Job_listbox.delete(0, tk.END)
         for job in self.Jobs:   
@@ -149,6 +184,9 @@ class JobManagementSystem:
             if job.subjob:
                 job_details += f", SubJob: {job_dict['subjob']}"
             self.Job_listbox.insert(tk.END, job_details)
+            self.update_Job_count()            
+            print("Job list updated")
+            
 
 class Job:
     def __init__(self, team, description, status, subjob=None):
