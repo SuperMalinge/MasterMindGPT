@@ -136,6 +136,33 @@ class TaskBoardGUI:
         # Start checking the queue
         self.check_queue()                         
 
+    def handle_add_question(self):
+    # Implementation for adding a question goes here
+    # For example, you might want to grab the data from the fields,
+    # package it into a structure, and then add it to the selected job.
+    # At the end, don't forget to close the question window after adding the question.
+    
+    # Get the input data from the entry fields
+        question = self.question_entry.get()
+        ask_question = self.ask_question_entry.get()
+        suggestion_1 = self.suggestion_1_entry.get()
+        suggestion_2 = self.suggestion_2_entry.get()
+        own_suggestion = self.own_suggestion_entry.get()
+        scratch_question = self.scratch_question_entry.get()
+    
+    # Now package this data into a dictionary or a suitable data structure
+    # Assuming selected_Job is a job you want to add these questions to:
+        if self.selected_Job:  # If a job is selected
+        # For example, assume the job object has an 'add_question' method or similar
+            self.selected_Job.add_question(question, ask_question, suggestion_1, suggestion_2, own_suggestion, scratch_question)
+        # Log the addition
+            self.logger.log_to_widget(f"Question and suggestions added to job: {self.selected_Job.description}")
+        else:
+            messagebox.showerror("Error", "No job selected to add this question to!")
+    
+    # Assuming this is inside a child window, you might want to close the window after adding
+    # question_window.destroy()  # You need to ensure you pass the correct reference to destroy the window
+
     def get_current_workflow(self):
         # If tasks is supposed to come from somewhere else in your class, update this method to use that.
         if hasattr(self, 'tasks'):
