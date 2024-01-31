@@ -51,6 +51,7 @@ class WorkflowManager:
         self.logger.log_to_widget("Initializing RAG agents with llm_config:")
         docs_directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'docs')        
         try:
+            # Create the Planner agent
             self.retrieve_assistant_agent_planner = RetrieveAssistantAgent(
                 name="Planner Agent",
                 system_message="You plan the given task.",
@@ -59,7 +60,9 @@ class WorkflowManager:
             print("Planner Agent (RetrieveAssistantAgent) initialized successfully.")
             self.logger.log_to_widget("Planner Agent (RetrieveAssistantAgent) initialized successfully.")
             # Immediately add the agent to the CEO's list
-            ceo_boss.add_agent(self.retrieve_assistant_agent_planner)
+            ceo_boss.add_agent(self.retrieve_assistant_agent_planner, "1 Planner")	
+
+            # Create the Orchestra agent
             self.retrieve_assistant_agent_orchestra = RetrieveAssistantAgent(
                 name="Orchestra Agent",
                 system_message="You orchestrate the workflow.",
@@ -67,8 +70,9 @@ class WorkflowManager:
             )
             print("Orchestra Agent (RetrieveAssistantAgent) initialized successfully.")
             self.logger.log_to_widget("Orchestra Agent (RetrieveAssistantAgent) initialized successfully.")
-            # Immediately add the agent to the CEO's list
-            ceo_boss.add_agent(self.retrieve_assistant_agent_orchestra)            
+            ceo_boss.add_agent(self.retrieve_assistant_agent_orchestra, "2 Orchestra")     
+
+            # Create the CEO proxy agent                         
             self.retrieve_user_proxy_agent = RetrieveUserProxyAgent(
                 name="CEO Proxy Agent",
                 retrieve_config={

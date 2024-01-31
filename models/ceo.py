@@ -1,5 +1,9 @@
 import tkinter as tk
 
+class Agent:
+    def __init__(self, name):
+        self.name = name
+        self.team = None  # Default to None, will be set when the agent is added by the CEO
 
 class CEO:
     def __init__(self, agent_listbox, chat_output, task_queue):
@@ -9,6 +13,8 @@ class CEO:
         from gui.task_board_gui import Logger
         self.logger = Logger(chat_output)
         self.task_queue = task_queue  # Queue for inter-thread communication
+        #add team attribue to the agent class    
+          
                         
     def initiate_workflow(self, message):
         if message == "start the workflow":
@@ -19,7 +25,22 @@ class CEO:
             for job in planner_tasks:
                 self.delegate_task(job)
 
-    def add_agent(self, agent):                     
+    def add_agent(self, agent, team):    
+        # Check if agent is already added
+        if agent.name in self.agents:
+            print(f"Agent {agent.name} is already added.")
+            self.logger.log_to_widget(f"Agent {agent.name} is already added to the team {team}.")
+            return   
+
+        # Associate the agent with a team
+        agent.team = team  # Assuming that the 'Agent' class has a 'team' attribute
+        self.agents[agent.name] = agent
+        print(f"Added agent {agent.name} with team: {team} to CEO's list of agents.")
+        self.logger.log_to_widget(f"Added agent {agent.name} with team: {team} to CEO's list of agents.")
+
+        # Insert the agent's name and team to the agent_listbox using the task queue
+        agent_display_name = f"{agent.name} ({team})"
+        self.task_queue.put(lambda: self.agent_listbox.insert(tk.END, agent_display_name))              
         self.agents[agent.name] = agent
         print(f"Added agent {agent.name} to CEO's list of agents.")
         self.logger.log_to_widget(f"Added agent {agent.name} to CEO's list of agents.")
@@ -76,3 +97,5 @@ class CEO:
         print(f"Added job {job.description} to CEO's list of jobs.")
         self.logger.log_to_widget(f"Added job {job.description} to CEO's list of jobs.")         
         self.task_queue.put(lambda: self.logger.log_to_widget(f"Added job {job.description} to CEO's list of jobs."))
+
+
