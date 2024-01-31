@@ -155,6 +155,20 @@ class JobManagementSystem:
         subjob = self.subjob_entry.get()        
         self.logger.log_to_widget("A new Job has been added: " + str(new_job) + "\n")
 
+    # Change the add_job method to accept a Job object directly
+    def add_job(self, new_job):        
+        if not new_job.team:
+            self.logger.log_to_widget("Error: Please provide a team for the job.")
+            return
+
+        # Appends the new job to the internal list of Jobs
+        self.Jobs.append(new_job)
+        # Inserts the new job into the GUI listbox, after clearing it
+        self.update_job_list()
+        # Log that the new job was added
+        self.logger.log_to_widget("A new Job has been added: " + str(new_job) + "\n")
+        # Optionally, call any additional methods to handle a new job addition like updating counters, etc.
+
     def agent_add_job(self, team, job_description, status, subjob):
         # Create the Job object
         new_job = Job(team, job_description, status, subjob)
@@ -187,7 +201,6 @@ class JobManagementSystem:
             self.update_Job_count()            
             print("Job list updated")
             
-
 class Job:
     def __init__(self, team, description, status, subjob=None):
         self.team = team

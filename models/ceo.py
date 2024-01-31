@@ -13,9 +13,8 @@ class CEO:
         from gui.task_board_gui import Logger
         self.logger = Logger(chat_output)
         self.task_queue = task_queue  # Queue for inter-thread communication
-        #add team attribue to the agent class    
-          
-                        
+        self.job_management_system = job_management_system         
+                                  
     def initiate_workflow(self, message):
         if message == "start the workflow":
             print("Starting the workflow...")
@@ -59,8 +58,7 @@ class CEO:
             self.logger.log_to_widget("Trying to add agents to the list")
             #retrieve the agents from the task board gui agent listbox
             print("Retrieving agents from the task board gui agent listbox")
-            self.logger.log_to_widget("Retrieving agents from the task board gui agent listbox")
-                    
+            self.logger.log_to_widget("Retrieving agents from the task board gui agent listbox")                    
             return
 
         # Delegate task to the appropriate agent based on job team
@@ -93,9 +91,18 @@ class CEO:
         return status_report
 
     def add_job(self, job):       
-        self.jobs.append(job)
-        print(f"Added job {job.description} to CEO's list of jobs.")
-        self.logger.log_to_widget(f"Added job {job.description} to CEO's list of jobs.")         
-        self.task_queue.put(lambda: self.logger.log_to_widget(f"Added job {job.description} to CEO's list of jobs."))
+        # Uses the JobManagementSystem's add_job method to add a job
+        self.job_management_system.add_job(job)
+        # The logging is taken care of within the JMS's add_job method
+
+        # example of how to add a job to the CEO's jobs list
+        #team = "1 Planner"
+        #description = "Plan the project execution"
+        #status = "not solved"
+        #subjob = None
+
+        #new_job = Job(team, description, status, subjob)
+        #job_management_system_instance.add_job(new_job)
+
 
 

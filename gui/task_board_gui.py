@@ -158,10 +158,8 @@ class TaskBoardGUI:
         # Log the addition
             self.logger.log_to_widget(f"Question and suggestions added to job: {self.selected_Job.description}")
         else:
-            messagebox.showerror("Error", "No job selected to add this question to!")
-    
-    # Assuming this is inside a child window, you might want to close the window after adding
-    # question_window.destroy()  # You need to ensure you pass the correct reference to destroy the window
+            messagebox.showerror("Error", "No job selected to add this question to!")        
+        self.question_window.destroy()
 
     def get_current_workflow(self):
         # If tasks is supposed to come from somewhere else in your class, update this method to use that.
