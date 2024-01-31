@@ -32,6 +32,7 @@ Next level AutoGen with teams, tools and training to reach your goals.
 ## Developer 
 Discord: SuperMalinge
 
+
 ## Todo List
 
 - [ ] **High Priority:**
@@ -322,7 +323,6 @@ Taskboard looks like this now:
     Get all tasks with [Task][Level:7-2][Manual and Requirements][Prio:1][not solved]
     Complete the project manual and requirements.
     when its done, send it back with [solved task]
-
 
 Contributing
 
