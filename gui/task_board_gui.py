@@ -315,7 +315,6 @@ class TaskBoardGUI:
 
         self.root.after(1000, self.check_queue)  # Schedule to check the queue again
 
-
     def open_question_window(self):
         question_window = tk.Toplevel(self.root)
         question_window.title("Questions")
