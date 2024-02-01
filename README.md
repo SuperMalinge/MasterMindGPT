@@ -32,7 +32,6 @@ Next level AutoGen with teams, tools and training to reach your goals.
 ## Developer 
 Discord: SuperMalinge
 
-
 ## Todo List
 
 - [ ] **High Priority:**
