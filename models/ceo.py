@@ -31,31 +31,39 @@ class CEO:
             for job in planner_tasks:
                 self.delegate_task(job)
 
+                
     def add_agent(self, agent, team):    
-        # Check if the agent is already added or if the team is undefined or empty
-        if agent.name in self.agents:
-            print(f"Agent {agent.name} is already added.")
-            self.logger.log_to_widget(f"Agent {agent.name} is already added to the team {team}.")
-            return
-        
-        # The team should be a non-empty string for an agent to be validly associated with it
+        # Check if the team is undefined or empty
         if not team:
             print(f"Agent {agent.name} cannot be added without a specified team.")
             self.logger.log_to_widget(f"Agent {agent.name} cannot be added without a specified team.")
             return
 
-        # Associate the agent with a team
-        agent.team = team  # Assuming that the 'Agent' class has a 'team' attribute
-        agent_display_name = f"{agent.name} ({team})"
-        
-        # Add the agent to the dictionary and listbox in a thread-safe manner using task_queue
-        self.agents[agent.name] = agent
-        self.task_queue.put(lambda: self.agent_listbox.insert(tk.END, agent_display_name))
-        
-        # Log the addition with the proper confirmation
-        confirmation_message = f"Added agent {agent.name} with team: {team} to CEO's list of agents."
-        print(confirmation_message)
-        self.logger.log_to_widget(confirmation_message)
+        # Check if the agent is already added
+        if agent.name not in self.agents:
+            # Associate the agent with a team and add to the dictionary
+            agent.team = team
+            self.agents[agent.name] = agent
+            
+            # Log the addition
+            confirmation_message = f"Added agent {agent.name} with team: {team} to CEO's list of agents."
+            print(confirmation_message)
+            self.logger.log_to_widget(confirmation_message)
+            # Update Listbox with a thread-safe call
+            self.update_agents_listbox()
+        else:
+            self.logger.log_to_widget(f"Agent {agent.name} is already in the CEO's list.")
+    
+    def update_agents_listbox(self):
+        # This method should be thread-safe
+        self.task_queue.put(self.sync_agents_listbox)
+
+    def sync_agents_listbox(self):
+        # Synchronize the Listbox with the CEO's agents dictionary
+        self.agent_listbox.delete(0, tk.END)  # Clear the Listbox before updating
+        for agent_name, agent in self.agents.items():
+            agent_display_name = f"{agent.name} ({agent.team})"
+            self.agent_listbox.insert(tk.END, agent_display_name)
        
     def delegate_task(self, job):           
         print(f"Delegating task: {job}")  # Print a message
