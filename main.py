@@ -17,6 +17,7 @@ llm_config = [
     }
 ]
 
+#this is the main function that runs the main program in the main.py file
 if __name__ == "__main__":
     root = tk.Tk()
     game = []

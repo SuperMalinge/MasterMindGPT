@@ -6,7 +6,7 @@ class Agent:
         self.team = None  # Default to None, will be set when the agent is added by the CEO
 
 class CEO:
-    def __init__(self, agent_listbox, chat_output, task_queue):
+    def __init__(self, agent_listbox, chat_output, task_queue, job_management_system):
         self.agents = {}
         self.jobs = []
         self.agent_listbox = agent_listbox  # Tkinter Listbox widget for agents
@@ -25,28 +25,32 @@ class CEO:
                 self.delegate_task(job)
 
     def add_agent(self, agent, team):    
-        # Check if agent is already added
+        # Check if the agent is already added or if the team is undefined or empty
         if agent.name in self.agents:
             print(f"Agent {agent.name} is already added.")
             self.logger.log_to_widget(f"Agent {agent.name} is already added to the team {team}.")
-            return   
+            return
+        
+        # The team should be a non-empty string for an agent to be validly associated with it
+        if not team:
+            print(f"Agent {agent.name} cannot be added without a specified team.")
+            self.logger.log_to_widget(f"Agent {agent.name} cannot be added without a specified team.")
+            return
 
         # Associate the agent with a team
         agent.team = team  # Assuming that the 'Agent' class has a 'team' attribute
-        self.agents[agent.name] = agent
-        print(f"Added agent {agent.name} with team: {team} to CEO's list of agents.")
-        self.logger.log_to_widget(f"Added agent {agent.name} with team: {team} to CEO's list of agents.")
-
-        # Insert the agent's name and team to the agent_listbox using the task queue
         agent_display_name = f"{agent.name} ({team})"
-        self.task_queue.put(lambda: self.agent_listbox.insert(tk.END, agent_display_name))              
-        self.agents[agent.name] = agent
-        print(f"Added agent {agent.name} to CEO's list of agents.")
-        self.logger.log_to_widget(f"Added agent {agent.name} to CEO's list of agents.")
-        #self.agent_listbox.insert(tk.END, agent.name)  # Add this line
-        # Invoke the queue to asynchronously add agent's name to the agent_listbox
-        self.task_queue.put(lambda: self.agent_listbox.insert(tk.END, agent.name))
         
+        # Add the agent to the dictionary and listbox in a thread-safe manner using task_queue
+        self.agents[agent.name] = agent
+        self.task_queue.put(lambda: self.agent_listbox.insert(tk.END, agent_display_name))
+        
+        # Log the addition with the proper confirmation
+        confirmation_message = f"Added agent {agent.name} with team: {team} to CEO's list of agents."
+        print(confirmation_message)
+        self.logger.log_to_widget(confirmation_message)
+
+       
     def delegate_task(self, job):           
         print(f"Delegating task: {job}")  # Print a message
         self.logger.log_to_widget(f"Delegating task: {job}")  # Print a message

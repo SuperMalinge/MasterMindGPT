@@ -8,8 +8,8 @@ from autogen.agentchat.contrib.retrieve_assistant_agent import RetrieveAssistant
 from autogen.agentchat.contrib.retrieve_user_proxy_agent import RetrieveUserProxyAgent
 import tkinter.messagebox as messagebox
 
-
 class WorkflowManager:    
+    # This class is responsible for the workflow management in the workflow_manager.py
     def __init__(self, llm_config, chat_output, job_management_system, ceo_boss, agent_listbox, task_queue):
         self.llm_config = llm_config              
         self.job_management_system = job_management_system

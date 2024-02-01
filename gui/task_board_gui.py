@@ -7,6 +7,7 @@ from models.agent_actions import Agent_actions
 from gui.game_planning_gui import GamePlanningGUI
 from queue import Queue, Empty
 import tkinter.messagebox as messagebox
+from data.job import Job
 
 llm_config = [
     {
@@ -18,10 +19,11 @@ llm_config = [
 ]
 
 class TaskBoardGUI:
+    # This class is the main GUI class for the task board in the task_board_gui.py file
     def __init__(self, root, game, chat_input, company, master, llm_config, team, task):
         self.root = root
         self.root.title("MasterMindGPT Job Board")
-        self.Job = []
+        self.Job = Job
         self.Jobs = []                     
         self.llm_config = llm_config  # This assumes llm_config is passed in during instantiation               
 
@@ -129,7 +131,7 @@ class TaskBoardGUI:
         self.agent_listbox.place(x=450, y=200)
       
         # Initialize the classes        
-        self.ceo_boss = CEO(self.agent_listbox, self.chat_output, self.task_queue)
+        self.ceo_boss = CEO(self.agent_listbox, self.chat_output, self.task_queue,self.job_management_system)
         self.workflow_manager = WorkflowManager(llm_config, self.chat_output, self.job_management_system, self.ceo_boss, self.agent_listbox, self.task_queue)
         self.agent_actions = Agent_actions(self.task, self.team, self.chat_output)   
 
@@ -274,18 +276,45 @@ class TaskBoardGUI:
         if chat_input:
             threading.Thread(target=self.workflow_manager.initiate_workflow, args=(chat_input,)).start()
         else:
-            tk.messagebox.showerror("Error", "Please enter a job to initiate the workflow")
+            messagebox.showerror("Error", "Please enter a job to initiate the workflow")
 
     def check_queue(self):
         try:
-            job_result = self.task_queue.get(block=False)
-            # Here, handle your retrieved job result. For example:
-            self.Job_listbox.insert(tk.END, job_result)
-        except Empty:            
+            #count all jobs in the queue
+            #job_count = sum('Job' in Job['Job'].lower() for Job in self.Jobs)
+            #print("there are currently", job_count, "jobs in the queue")
+            job_to_add = self.task_queue.get(block=False)  # Get a job from the queue
+        
+            # Assuming job_to_add is of Job type or a tuple, replace with appropriate validation
+            valid_job = False
+            if isinstance(job_to_add, Job):  # If job_to_add is a Job object
+                valid_job = True
+            elif isinstance(job_to_add, tuple) and len(job_to_add) == 4:
+                valid_job = all(isinstance(field, str) for field in job_to_add)  # Validate job as a tuple of strings
+
+            if valid_job:
+                # Here, insert job_to_add if it's valid.
+                # You may need to format job_to_add appropriately if it's not already formatted for display
+                # For a Job object, this might involve calling a method or accessing attributes to get display string
+                if isinstance(job_to_add, Job):
+                    display_str = f"{job_to_add.team}, {job_to_add.description}, {job_to_add.status}, {job_to_add.subjob}"
+                else:  # If job_to_add is a tuple
+                    display_str = ", ".join(job_to_add)
+            
+                self.Job_listbox.insert(tk.END, display_str)
+
+        except Empty:  # Queue is empty, no action taken
             pass
         finally:
-            self.ceo_boss.process_queue()  # Added call to process the queue
-            self.root.after(100, self.check_queue)  # Schedule to check again
+            # This call should also likely be in a try-except block
+            try:
+                self.ceo_boss.process_queue()  # Process queues if the ceo_boss has any queued actions
+            except Exception as e:
+                # Log this exception or show an error message
+                self.logger.log_to_widget("Error processing the boss's queue: " + str(e))
+
+        self.root.after(1000, self.check_queue)  # Schedule to check the queue again
+
 
     def open_question_window(self):
         question_window = tk.Toplevel(self.root)

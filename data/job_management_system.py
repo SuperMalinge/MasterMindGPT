@@ -3,13 +3,12 @@ from data.job import Job
 import tkinter.messagebox as messagebox
 
 class JobManagementSystem:
+    #This is the JMS class that handles the job management system in the job_management_system.py file
     def __init__(self, root, Job_listbox, task_board_gui, chat_output, task_queue):
         self.root = root
         self.Job_listbox = Job_listbox
         self.Jobs = []
-        self.selected_Job = None
-        self.selected_team = None
-        self.selected_status = None
+        self.selected_Job = None        
         self.selected_subjob = None
         self.selected_question = None
         self.selected_ask_question = None
@@ -18,8 +17,7 @@ class JobManagementSystem:
         self.selected_own_suggestion = None
         self.selected_scratch_question = None
         self.selected_task = None
-        self.selected_task_description = None
-        self.selected_status = None
+        self.selected_task_description = None        
         self.selected_subtask = None
         self.selected_current_workflow = None
         self.selected_question_count = None
@@ -47,6 +45,7 @@ class JobManagementSystem:
         # The text will now always show the number of jobs including zero (e.g., "Add Job (0)")
         self.task_board_gui.add_Job_button.config(text=f"Add Job ({Job_count})")     
 
+    # deletes a job from the job listbox in task board gui when it is selected
     def delete_Job(self):
         try:
             index = self.Job_listbox.curselection()[0]
@@ -54,8 +53,9 @@ class JobManagementSystem:
             del self.Jobs[index]
             self.update_job_list()
         except IndexError:
-            tk.messagebox.showerror("Error", "Please select a Job")
+            messagebox.showerror("Error", "Please select a Job")
             
+    # adds a question to the question listbox in task board gui when something is not clear        
     def add_question(self, question_window):
         question_label = tk.Label(question_window, text="Question:")
         question_label.pack()
@@ -136,27 +136,33 @@ class JobManagementSystem:
         add_task_button.pack()
 
     # adds a new job to the job listbox in task board gui
-    def add_job(self, job_window):        
-        team = self.selected_team.get()
-        if not team:
-            tk.messagebox.showerror("Error", "Please enter a value for the team")
-            return
+    def add_job(self, job_window):
+        try:
+            team = self.selected_team.get()
+            if not team:
+                messagebox.showerror("Error", "Please enter a value for the team")
+                return
 
-        job_description = self.job_description_entry.get()
-        status = self.selected_status.get()
-        subjob = self.subjob_entry.get()
-        new_job = Job(team, job_description, status, subjob)
-        self.Jobs.append(new_job)
-        self.Job_listbox.delete(0, tk.END)
-        self.update_job_list()        
-        team = self.selected_team.get()
-        job_description = self.job_description_entry.get()
-        status = self.selected_status.get()
-        subjob = self.subjob_entry.get()        
-        self.logger.log_to_widget("A new Job has been added: " + str(new_job) + "\n")
+            job_description = self.job_description_entry.get()
+            status = self.selected_status.get()
+            subjob = self.subjob_entry.get()
+            new_job = Job(team, job_description, status, subjob)
+            self.Jobs.append(new_job)
+            self.Job_listbox.delete(0, tk.END)
+            self.update_job_list()        
+            team = self.selected_team.get()
+            job_description = self.job_description_entry.get()
+            status = self.selected_status.get()
+            subjob = self.subjob_entry.get()        
+            self.logger.log_to_widget("A new Job has been added: " + str(new_job) + "\n")
+            job_window.destroy()                  
+        except Exception as e:
+            # Log exception or show an error message
+            self.logger.log_to_widget("Error adding job: " + str(e))
+            messagebox.showerror("Error", "Failed to add job: " + str(e))   
 
     # Change the add_job method to accept a Job object directly
-    def add_job(self, new_job):        
+    def add_job_simple(self, new_job):        
         if not new_job.team:
             self.logger.log_to_widget("Error: Please provide a team for the job.")
             return
