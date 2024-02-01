@@ -1,11 +1,18 @@
 import tkinter as tk
 
 class Agent:
+    #this class is responsible for the agent in the ceo.py file
     def __init__(self, name):
         self.name = name
         self.team = None  # Default to None, will be set when the agent is added by the CEO
 
 class CEO:
+    # This class is responsible for the CEO in the ceo.py file
+    # The CEO is responsible for managing the agents and delegating tasks to them
+    # The CEO is the proxy agent in the listbox of agents in the GUI
+    # He is the boss of all the agents
+    # The CEO is the only agent that can add new agents to the list of agents
+    # He is initializing the workflow and processing the queue
     def __init__(self, agent_listbox, chat_output, task_queue, job_management_system):
         self.agents = {}
         self.jobs = []
@@ -49,7 +56,6 @@ class CEO:
         confirmation_message = f"Added agent {agent.name} with team: {team} to CEO's list of agents."
         print(confirmation_message)
         self.logger.log_to_widget(confirmation_message)
-
        
     def delegate_task(self, job):           
         print(f"Delegating task: {job}")  # Print a message

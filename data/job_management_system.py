@@ -4,6 +4,7 @@ import tkinter.messagebox as messagebox
 
 class JobManagementSystem:
     #This is the JMS class that handles the job management system in the job_management_system.py file
+    #The JMS is responsible for managing the jobs     
     def __init__(self, root, Job_listbox, task_board_gui, chat_output, task_queue):
         self.root = root
         self.Job_listbox = Job_listbox
