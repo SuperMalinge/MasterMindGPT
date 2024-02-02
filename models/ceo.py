@@ -70,7 +70,6 @@ class CEO:
         print(f"Added {agent.name} to team: {team}, updating the Listbox now.")
         self.update_agents_listbox()
 
-    
     def update_agents_listbox(self):
         # This method should be thread-safe
         self.task_queue.put(self.sync_agents_listbox)
