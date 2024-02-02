@@ -6,6 +6,26 @@ class Agent:
         self.name = name
         self.team = None  # Default to None, will be set when the agent is added by the CEO
 
+    def handle_task(self, job, task_queue, job_management_system, logger):
+        # Preprocess the job input to structure it correctly
+        processed_input = self.preprocess_chat_input(job['Job'])
+
+        # The job already has the correct structure since it's being passed in
+        # with team, job description, status, and subjob details.
+
+        # Add the job to the job management system
+        job_management_system.add_job(job)
+
+        # Update the job list GUI
+        task_queue.put(lambda: job_management_system.update_job_list())
+
+        # Reset the planner and initiate the workflow
+        self.reset()
+        task_queue.put(lambda: logger.log_to_widget(f"Initiated workflow with input: {processed_input}"))
+        # Here, instead of specifying 'self.retrieve_assistant_agent_planner',
+        # we just use 'self' because 'handle_task' is now an instance method of the agent
+        self.initiate_workflow(processed_input, task_queue, logger)
+
 class CEO:
     # This class is responsible for the CEO in the ceo.py file
     # The CEO is responsible for managing the agents and delegating tasks to them
@@ -31,39 +51,48 @@ class CEO:
             for job in planner_tasks:
                 self.delegate_task(job)
 
-                
+
     def add_agent(self, agent, team):    
-        # Check if the team is undefined or empty
+        # Add debug output to confirm flow
+        print(f"Attempting to add agent: {agent.name} on team: {team}")
+        if team in self.agents:
+            print(f"Agent for team {team} is already added.")
+            self.logger.log_to_widget(f"Agent for team {team} is already added.")
+            return
+
         if not team:
             print(f"Agent {agent.name} cannot be added without a specified team.")
             self.logger.log_to_widget(f"Agent {agent.name} cannot be added without a specified team.")
             return
 
-        # Check if the agent is already added
-        if agent.name not in self.agents:
-            # Associate the agent with a team and add to the dictionary
-            agent.team = team
-            self.agents[agent.name] = agent
-            
-            # Log the addition
-            confirmation_message = f"Added agent {agent.name} with team: {team} to CEO's list of agents."
-            print(confirmation_message)
-            self.logger.log_to_widget(confirmation_message)
-            # Update Listbox with a thread-safe call
-            self.update_agents_listbox()
-        else:
-            self.logger.log_to_widget(f"Agent {agent.name} is already in the CEO's list.")
+        agent.team = team
+        self.agents[team] = agent
+        print(f"Added {agent.name} to team: {team}, updating the Listbox now.")
+        self.update_agents_listbox()
+
     
     def update_agents_listbox(self):
         # This method should be thread-safe
         self.task_queue.put(self.sync_agents_listbox)
 
     def sync_agents_listbox(self):
-        # Synchronize the Listbox with the CEO's agents dictionary
-        self.agent_listbox.delete(0, tk.END)  # Clear the Listbox before updating
-        for agent_name, agent in self.agents.items():
-            agent_display_name = f"{agent.name} ({agent.team})"
-            self.agent_listbox.insert(tk.END, agent_display_name)
+        # Method should be thread-safe
+        try:
+            print("Syncing Listbox...")
+            current_teams_in_listbox = [self.agent_listbox.get(idx) for idx in range(self.agent_listbox.size())]
+            print("Currently in Listbox:", current_teams_in_listbox)
+            
+            # Clear the Listbox before updating
+            self.agent_listbox.delete(0, tk.END)  
+            for team_name, agent in self.agents.items():
+                agent_display_name = f"{agent.name} ({agent.team})"
+                if agent_display_name not in current_teams_in_listbox:
+                    self.agent_listbox.insert(tk.END, agent_display_name)
+            print("Finished syncing Listbox.")
+        except Exception as e:
+            print(f"Error updating Listbox: {e}")
+            self.logger.log_to_widget(f"Error updating Listbox: {e}")
+
        
     def delegate_task(self, job):           
         print(f"Delegating task: {job}")  # Print a message

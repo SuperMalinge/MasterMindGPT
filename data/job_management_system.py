@@ -29,7 +29,7 @@ class JobManagementSystem:
         self.subjob_entry = tk.Entry()
         from gui.task_board_gui import Logger
         self.logger = Logger(chat_output)  
-        self.agent_add_job("1 Planner", "test", "not solved", "None")
+        #self.agent_add_job("1 Planner", "test", "not solved", "None") # Example of how to add a job from the JMS
         self.task_queue = task_queue
           
     def update_Job_count(self):
