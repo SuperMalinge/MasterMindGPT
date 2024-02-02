@@ -136,7 +136,7 @@ class TaskBoardGUI:
         self.agent_actions = Agent_actions(self.task, self.team, self.chat_output)   
 
         # Start checking the queue
-        self.check_queue()                         
+        self.check_queue() 
 
     def handle_add_question(self):
     # Implementation for adding a question goes here
