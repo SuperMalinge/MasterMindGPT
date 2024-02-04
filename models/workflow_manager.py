@@ -75,6 +75,7 @@ class WorkflowManager:
             # Create the CEO proxy agent                         
             self.retrieve_user_proxy_agent = RetrieveUserProxyAgent(
                 name="CEO Proxy Agent",
+                system_message="You are the CEO of the company.",
                 retrieve_config={
                     "task": "qa",
                     "docs_path": docs_directory,

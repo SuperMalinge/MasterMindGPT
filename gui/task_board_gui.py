@@ -152,7 +152,7 @@ class TaskBoardGUI:
         own_suggestion = self.own_suggestion_entry.get()
         scratch_question = self.scratch_question_entry.get()
     
-    # Now package this data into a dictionary or a suitable data structure
+    # Now package this data into a dictionary 
     # Assuming selected_Job is a job you want to add these questions to:
         if self.selected_Job:  # If a job is selected
         # For example, assume the job object has an 'add_question' method or similar

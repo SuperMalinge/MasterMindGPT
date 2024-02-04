@@ -22,7 +22,7 @@ if __name__ == "__main__":
     root = tk.Tk()
     game = []
     chat_input = []
-    company = "MasterMindGPT Game Maker"
+    company = "MasterMindGPT company"
     master = []
     task = []
     team = []    
