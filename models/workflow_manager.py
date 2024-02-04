@@ -8,22 +8,25 @@ from autogen.agentchat.contrib.retrieve_assistant_agent import RetrieveAssistant
 from autogen.agentchat.contrib.retrieve_user_proxy_agent import RetrieveUserProxyAgent
 import tkinter.messagebox as messagebox
 
+Job_Management_System = JobManagementSystem()
+
 class CustomAssistantAgent(RetrieveAssistantAgent):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def handle_task(self, job):
-        # Preprocess the job input to structure it correctly
-        processed_input = self.preprocess_chat_input(job['Job'])
 
+    def handle_task(self, job,Job_Management_System):        
+        # Preprocess the job input to structure it correctly        
+        processed_input = self.preprocess_chat_input(job['Job'])
         # The job already has the correct structure since it's being passed in
         # with team, job description, status, and subjob details.
 
         # Add the job to the job management system
-        self.job_management_system.add_job(job)
+
+        Job_Management_System.add_job(job)
 
         # Update the job list GUI
-        self.task_queue.put(lambda: self.job_management_system.update_job_list())
+        self.task_queue.put(lambda: Job_Management_System.update_job_list())
 
         # Reset the planner and initiate the workflow
         self.reset()
