@@ -8,6 +8,38 @@ from autogen.agentchat.contrib.retrieve_assistant_agent import RetrieveAssistant
 from autogen.agentchat.contrib.retrieve_user_proxy_agent import RetrieveUserProxyAgent
 import tkinter.messagebox as messagebox
 
+class CustomAssistantAgent(RetrieveAssistantAgent):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def handle_task(self, job):
+        # Preprocess the job input to structure it correctly
+        processed_input = self.preprocess_chat_input(job['Job'])
+
+        # The job already has the correct structure since it's being passed in
+        # with team, job description, status, and subjob details.
+
+        # Add the job to the job management system
+        self.job_management_system.add_job(job)
+
+        # Update the job list GUI
+        self.task_queue.put(lambda: self.job_management_system.update_job_list())
+
+        # Reset the planner and initiate the workflow
+        self.reset()
+        self.task_queue.put(lambda: self.logger.log_to_widget(f"Initiated workflow with input: {processed_input}"))
+        # Here, instead of specifying 'self.retrieve_assistant_agent_planner',
+        # we just use 'self' because 'handle_task' is now an instance method of the agent
+        self.initiate_workflow(processed_input, self.task_queue, self.logger)
+
+    def preprocess_chat_input(self, chat_input):
+        # Preprocess the chat input so that it's in the correct format
+        # the format resembles the job structure in the JobManagementSystem
+
+        # For now, we just return the chat input as is
+        return chat_input
+
+
 class WorkflowManager:    
     # This class is responsible for the workflow management in the workflow_manager.py
     def __init__(self, llm_config, chat_output, job_management_system, ceo_boss, agent_listbox, task_queue):
@@ -52,7 +84,7 @@ class WorkflowManager:
         docs_directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'docs')        
         try:
             # Create the Planner agent
-            self.retrieve_assistant_agent_planner = RetrieveAssistantAgent(
+            self.retrieve_assistant_agent_planner = CustomAssistantAgent(
                 name="Planner Agent",
                 system_message="You plan the given task.",
                 llm_config=self.llm_config,
@@ -63,7 +95,7 @@ class WorkflowManager:
             ceo_boss.add_agent(self.retrieve_assistant_agent_planner, "1 Planner")	
 
             # Create the Orchestra agent
-            self.retrieve_assistant_agent_orchestra = RetrieveAssistantAgent(
+            self.retrieve_assistant_agent_orchestra = CustomAssistantAgent(
                 name="Orchestra Agent",
                 system_message="You orchestrate the workflow.",
                 llm_config=self.llm_config,

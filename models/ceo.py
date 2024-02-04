@@ -6,26 +6,6 @@ class Agent:
         self.name = name
         self.team = None  # Default to None, will be set when the agent is added by the CEO
 
-    def handle_task(self, job, task_queue, job_management_system, logger):
-        # Preprocess the job input to structure it correctly
-        processed_input = self.preprocess_chat_input(job['Job'])
-
-        # The job already has the correct structure since it's being passed in
-        # with team, job description, status, and subjob details.
-
-        # Add the job to the job management system
-        job_management_system.add_job(job)
-
-        # Update the job list GUI
-        task_queue.put(lambda: job_management_system.update_job_list())
-
-        # Reset the planner and initiate the workflow
-        self.reset()
-        task_queue.put(lambda: logger.log_to_widget(f"Initiated workflow with input: {processed_input}"))
-        # Here, instead of specifying 'self.retrieve_assistant_agent_planner',
-        # we just use 'self' because 'handle_task' is now an instance method of the agent
-        self.initiate_workflow(processed_input, task_queue, logger)
-
 class CEO:
     # This class is responsible for the CEO in the ceo.py file
     # The CEO is responsible for managing the agents and delegating tasks to them
