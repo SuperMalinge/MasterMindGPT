@@ -8,7 +8,7 @@ from autogen.agentchat.contrib.retrieve_assistant_agent import RetrieveAssistant
 from autogen.agentchat.contrib.retrieve_user_proxy_agent import RetrieveUserProxyAgent
 import tkinter.messagebox as messagebox
 
-Job_Management_System = JobManagementSystem()
+#Job_Management_System = JobManagementSystem(root, task_board_gui.Job_listbox, task_board_gui,task_board_gui.chat_output, task_board_gui.task_queue)
 
 class CustomAssistantAgent(RetrieveAssistantAgent):
     def __init__(self, *args, **kwargs):
@@ -20,7 +20,6 @@ class CustomAssistantAgent(RetrieveAssistantAgent):
         processed_input = self.preprocess_chat_input(job['Job'])
         # The job already has the correct structure since it's being passed in
         # with team, job description, status, and subjob details.
-
         # Add the job to the job management system
 
         Job_Management_System.add_job(job)
