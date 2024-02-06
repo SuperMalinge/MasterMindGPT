@@ -142,8 +142,7 @@ class TaskBoardGUI:
     # Implementation for adding a question goes here
     # For example, you might want to grab the data from the fields,
     # package it into a structure, and then add it to the selected job.
-    # At the end, don't forget to close the question window after adding the question.
-    
+    # At the end, don't forget to close the question window after adding the question.    
     # Get the input data from the entry fields
         question = self.question_entry.get()
         ask_question = self.ask_question_entry.get()
