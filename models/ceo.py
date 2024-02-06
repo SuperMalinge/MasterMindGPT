@@ -74,7 +74,7 @@ class CEO:
 
     def delegate_task(self, job):           
         print(f"Delegating task: {job}")  # Print a message
-        self.logger.log_to_widget(f"Delegating task: {job}")  # Print a message
+        self.logger.log_to_widget(f"Delegating task: {job}")  
         if not self.agents:
             print("No agents available")
             self.logger.log_to_widget("No agents available")
