@@ -37,7 +37,6 @@ class CustomAssistantAgent(RetrieveAssistantAgent):
     def preprocess_chat_input(self, chat_input):
         # Preprocess the chat input so that it's in the correct format
         # the format resembles the job structure in the JobManagementSystem
-
         # For now, we just return the chat input as is
         return chat_input
 
