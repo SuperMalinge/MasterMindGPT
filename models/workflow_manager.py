@@ -20,7 +20,6 @@ class CustomAssistantAgent(RetrieveAssistantAgent):
         # The job already has the correct structure since it's being passed in
         # with team, job description, status, and subjob details.
         # Add the job to the job management system
-
         Job_Management_System.add_job(job)
 
         # Update the job list GUI
