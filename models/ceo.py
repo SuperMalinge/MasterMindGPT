@@ -73,7 +73,7 @@ class CEO:
             self.logger.log_to_widget(f"Error updating Listbox: {e}")
 
     def delegate_task(self, job):           
-        print(f"Delegating task: {job}")  # Print a message
+        print(f"Delegating task: {job}") 
         self.logger.log_to_widget(f"Delegating task: {job}")  
         if not self.agents:
             print("No agents available")
