@@ -14,7 +14,6 @@ class CustomAssistantAgent(RetrieveAssistantAgent):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-
     def handle_task(self, job,Job_Management_System):        
         # Preprocess the job input to structure it correctly        
         processed_input = self.preprocess_chat_input(job['Job'])
