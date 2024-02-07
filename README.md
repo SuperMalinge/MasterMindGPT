@@ -11,7 +11,7 @@ I'm excited to announce that the code has been updated and the functionality to 
 
 1. This repo is currently only a draft. After testing MasterMindGPT with CrewAI for agent support, I've decided to switch to AutoGen from Microsoft. Unfortunately, CrewAI did not work as expected.
 
-2. The current version is now using AutoGen. You will NEED to install it in a separate environment. 
+2. The current version is now using AutoGen with Retrieval Agents. You will NEED to install it in a separate environment. 
 
 The next step is that the CEO Agent is going to send the prompt to the Planner Agent, and this has to be done via the Job board. This is not working right now.
 
