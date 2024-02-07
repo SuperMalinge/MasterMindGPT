@@ -128,7 +128,7 @@ class TaskBoardGUI:
                 
         self.agent_listbox = tk.Listbox(root, width=40, height=10) # listbox for agents
         self.agent_listbox.pack()
-        self.agent_listbox.place(x=450, y=200)
+        self.agent_listbox.place(x=450, y=200)   
       
         # Initialize the classes        
         self.ceo_boss = CEO(self.agent_listbox, self.chat_output, self.task_queue,self.job_management_system)
@@ -140,7 +140,6 @@ class TaskBoardGUI:
 
     def handle_add_question(self):
     # Implementation for adding a question goes here
-    # For example, you might want to grab the data from the fields,
     # package it into a structure, and then add it to the selected job.
     # At the end, don't forget to close the question window after adding the question.    
     # Get the input data from the entry fields
@@ -311,7 +310,6 @@ class TaskBoardGUI:
             except Exception as e:
                 # Log this exception or show an error message
                 self.logger.log_to_widget("Error processing the boss's queue: " + str(e))
-
         self.root.after(1000, self.check_queue)  # Schedule to check the queue again
 
     def open_question_window(self):
