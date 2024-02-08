@@ -4,7 +4,7 @@ I'm excited to announce that the code has been updated and the functionality to 
 * Improved CEO Class 01/2024
 * refactored and split code 01/2024
 * added the agents to a list on the gui 01/2024
-* added queue function to different tasks 01/2024
+* added queue function for different tasks 01/2024
 * handling tasks by Agents is currenty WIP
 
 # Important
