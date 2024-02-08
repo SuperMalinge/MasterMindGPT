@@ -2,6 +2,8 @@ import tkinter as tk
 
 class GamePlanningGUI:
     # This class is responsible for the Game Planning GUI in game_planning_gui.py
+    # The agent will use this GUI to plan the game they are going to create
+    # The agent will enter the game name, genre, type, and story
     def __init__(self, root, chat_output):
         self.root = root   
         from gui.task_board_gui import Logger
