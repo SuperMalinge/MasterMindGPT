@@ -58,6 +58,7 @@ class TaskBoardGUI:
         self.Job_listbox.pack()
         self.Job_listbox.place(x=450, y=30)
 
+        #initialize the job management system because it is used in the Job listbox
         self.job_management_system = JobManagementSystem(root,self.Job_listbox, self, self.chat_output,self.task_queue)
             
         self.add_Job_button = tk.Button(root, text="Add Job", command=self.job_management_system.open_Job_window)
