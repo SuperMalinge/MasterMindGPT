@@ -45,8 +45,7 @@ class TaskBoardGUI:
         company = "MasterMindGPT Game Maker"    
         self.company = company  
         self.team = team
-        self.task = task
-        #agent_listbox = None
+        self.task = task        
         self.task_queue = Queue()  # Task queue for thread communication
 
         # Display the chat output
