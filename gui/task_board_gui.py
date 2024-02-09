@@ -20,6 +20,7 @@ llm_config = [
 
 class TaskBoardGUI:
     # This class is the main GUI class for the task board in the task_board_gui.py file
+    # It will contain all the widgets and methods for the task board GUI
     def __init__(self, root, game, chat_input, company, master, llm_config, team, task):
         self.root = root
         self.root.title("MasterMindGPT Job Board")
