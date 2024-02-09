@@ -98,6 +98,7 @@ class JobManagementSystem:
         team_label.pack()
 
         # Dropdown menu for selecting level
+        #this contains the teams that can be selected
         teams = ["1 Planner", "2 Orchestra", "2-1 Plan Build", "2-2 Structure Build", "2-3 Engine Choose or Build",
                  "2-4 Art and Prompt Build", "2-5 Quality Assist Orchestra", "3 Task Maker Logic", "3-1 GUI Logic",
                  "3-2 Backend Logic", "3-3 Engine Logic", "3-4 Preview Art", "3-5 Quality Assist Logic",
