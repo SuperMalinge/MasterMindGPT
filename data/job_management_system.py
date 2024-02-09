@@ -37,8 +37,7 @@ class JobManagementSystem:
     def update_Job_count(self):
         # Retrieve the current number of jobs
         Job_count = len(self.Jobs)
-        # Update the Job_count attribute of task_board_gui if needed
-        # Assuming task_board_gui is the correct place where this attribute is used
+        # Update the Job_count attribute of task_board_gui if needed        
         if hasattr(self.task_board_gui, 'Job_count'):
             self.task_board_gui.Job_count = Job_count
         # Update the Job_count_label widget text if it exists
