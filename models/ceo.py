@@ -31,7 +31,6 @@ class CEO:
             for job in planner_tasks:
                 self.delegate_task(job)
 
-
     def add_agent(self, agent, team):    
         # Add debug output to confirm flow
         print(f"Attempting to add agent: {agent.name} on team: {team}")
