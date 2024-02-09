@@ -104,7 +104,7 @@ class CEO:
                 action()  # Execute the action in the main thread
             except self.task_queue.empty():
                 pass
-
+    
     def report_task_delegation(self, job):       
         print(f"Delegated task '{job.description}' to {job['Team']}.")
         self.logger.log_to_widget(f"Delegated task '{job.description}' to {job['Team']}.")
@@ -113,6 +113,7 @@ class CEO:
         status_report = {agent_name: agent.report_status() for agent_name, agent in self.agents.items()}
         return status_report
 
+    #this is for the ceo to add a job to the job management system
     def add_job(self, job):       
         # Uses the JobManagementSystem's add_job method to add a job
         self.job_management_system.add_job(job)
