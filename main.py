@@ -18,6 +18,7 @@ llm_config = [
 ]
 
 #this is the main function that runs the main program in the main.py file
+#in this function, we create the root window, and then create the task board gui, game planning gui, and the workflow manager
 if __name__ == "__main__":
     root = tk.Tk()
     game = []
