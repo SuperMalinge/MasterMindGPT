@@ -1,5 +1,6 @@
 from typing import Optional
 
+# this class is used to structure the job that the agent will be performing
 class Job:
     def __init__(self, team: str, description: str, status: str = 'not solved', subjob: Optional[str] = None):
         self.team = team
