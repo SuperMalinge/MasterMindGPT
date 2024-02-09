@@ -10,6 +10,7 @@ import tkinter.messagebox as messagebox
 
 #Job_Management_System = JobManagementSystem(root, task_board_gui.Job_listbox, task_board_gui,task_board_gui.chat_output, task_board_gui.task_queue)
 
+# this class is responsible for the retrieval of the assistant agent in the workflow_manager.py
 class CustomAssistantAgent(RetrieveAssistantAgent):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
