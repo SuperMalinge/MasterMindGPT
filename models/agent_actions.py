@@ -5,6 +5,7 @@ class Agent_actions:
         self.team = team
         self.tasks = []        
 
+    # This function announces the task that the agent has received
     def handle_task(self, task):
         from gui.task_board_gui import Logger
         self.tasks.append(task)
