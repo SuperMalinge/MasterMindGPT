@@ -1,4 +1,4 @@
-
+# This class will be used to define the actions that an agent can perform. it is in the agent_actions.py file
 class Agent_actions:
     def __init__(self, name, team, chat_output):
         self.name = name
