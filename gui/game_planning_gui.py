@@ -44,6 +44,7 @@ class GamePlanningGUI:
         plan_window.geometry("500x700")  
         self.create_widgets(plan_window)
 
+    #the get_plan_output function is used to get the plan output from the game planning gui
     def get_plan_output(self, plan_window):               
         self.logger.log_to_widget(f"Plan: {self.game_name_entry.get()}")        
         self.game_name_entry.delete(0, tk.END)
