@@ -156,7 +156,6 @@ Taskboard looks like this now:
 [Task][Level:3-2][Backend][Prio:1][solved][build the choose options for processing data][Code]
 ... 
 
-
 ## The Finale: Quality Check Phase
 
 In the finale, our Quality Team steps in. They check all solved tasks for logic, quality, and completeness. They ask the user if the result is satisfying, and if not, they reprocess it or let the user provide the answer. The whole plan is saved and rated for quality, and all tasks are elevated to Level 4.
