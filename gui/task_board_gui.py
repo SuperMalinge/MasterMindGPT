@@ -261,7 +261,6 @@ class TaskBoardGUI:
     def refresh_agents_status(self):
         # This method will fetch status from CEO and update the GUI
         task_statuses = self.ceo_boss.report_tasks_status()
-        # (Here you'll write code to update some part of your GUI with the statuses)
         # (For example, you can update the Job listbox with the status of each Job)
         # (You can also update the agent listbox with the status of each agent)
         # (You can also update the chat output with the status of each agent)
