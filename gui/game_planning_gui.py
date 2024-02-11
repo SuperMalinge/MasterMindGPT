@@ -53,7 +53,7 @@ class GamePlanningGUI:
     def save_and_close(self):
         # Save the plan
         self.save_plan()
-        self.root.destroy()
+        self.plan_window.destroy()
 
     def save_plan(self):
         # Retrieve the values from the entry fields

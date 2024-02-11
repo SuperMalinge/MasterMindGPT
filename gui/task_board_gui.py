@@ -123,6 +123,7 @@ class TaskBoardGUI:
         self.send_button.place(x=100, y=350)
 
         # Create the Listbox widget for agents
+        
         self.agent_listbox_label = tk.Label(root, text="Agent List") 
         self.agent_listbox_label.pack()
         self.agent_listbox_label.place(x=450, y=220)
