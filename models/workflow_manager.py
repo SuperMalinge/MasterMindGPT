@@ -48,7 +48,7 @@ class WorkflowManager:
         from gui.task_board_gui import Logger
         self.logger = Logger(chat_output)
         self.task_queue = task_queue  # Queue for inter-thread communication
-        self.agent_listbox = agent_listbox  # Keep a reference to agent_listbox if needed
+        self.agent_listbox = agent_listbox 
         self.initialize_rag_agents(ceo_boss, agent_listbox)
 
     def initiate_workflow(self, chat_input):        
