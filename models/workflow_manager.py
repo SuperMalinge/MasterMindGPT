@@ -89,8 +89,7 @@ class WorkflowManager:
             print("Planner Agent (RetrieveAssistantAgent) initialized successfully.")
             self.logger.log_to_widget("Planner Agent (RetrieveAssistantAgent) initialized successfully.")
             # Immediately add the agent to the CEO's list
-            ceo_boss.add_agent(self.retrieve_assistant_agent_planner, "1 Planner")	
-
+            ceo_boss.add_agent(self.retrieve_assistant_agent_planner, "1 Planner")
             # Create the Orchestra agent
             self.retrieve_assistant_agent_orchestra = CustomAssistantAgent(
                 name="Orchestra Agent",
