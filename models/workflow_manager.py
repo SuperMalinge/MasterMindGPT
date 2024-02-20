@@ -98,8 +98,7 @@ class WorkflowManager:
             )
             print("Orchestra Agent (RetrieveAssistantAgent) initialized successfully.")
             self.logger.log_to_widget("Orchestra Agent (RetrieveAssistantAgent) initialized successfully.")
-            ceo_boss.add_agent(self.retrieve_assistant_agent_orchestra, "2 Orchestra")     
-
+            ceo_boss.add_agent(self.retrieve_assistant_agent_orchestra, "2 Orchestra")
             # Create the CEO proxy agent                         
             self.retrieve_user_proxy_agent = RetrieveUserProxyAgent(
                 name="CEO Proxy Agent",
