@@ -53,7 +53,6 @@ class WorkflowManager:
 
     def initiate_workflow(self, chat_input):        
         processed_input = self.preprocess_chat_input(chat_input)
-
         # Create the job
         job = {
             "Team": "1 Planner",
