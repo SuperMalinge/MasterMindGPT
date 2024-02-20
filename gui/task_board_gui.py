@@ -26,8 +26,7 @@ class TaskBoardGUI:
         self.root.title("MasterMindGPT Job Board")
         self.Job = Job
         self.Jobs = []                     
-        self.llm_config = llm_config  # This assumes llm_config is passed in during instantiation               
-
+        self.llm_config = llm_config  # This assumes llm_config is passed in during instantiation
         # Create attributes for Job-related widgets
         self.retrieve_assistant_agent = None
         self.retrieve_user_proxy_agent = None
