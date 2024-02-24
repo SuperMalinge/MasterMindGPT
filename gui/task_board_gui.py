@@ -324,6 +324,7 @@ class TaskBoardGUI:
         question_button = tk.Button(question_window, text="Get Questions", command=lambda: self.get_questions_output(question_window))
         question_button.pack()            
 
+# This class is used to log messages to the chat_output widget
 class Logger:
     def __init__(self, chat_output):
         self.chat_output = chat_output
