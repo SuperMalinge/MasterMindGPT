@@ -106,6 +106,7 @@ class CEO:
             except self.task_queue.empty():
                 pass
     
+    # Report the task delegation to the chat output
     def report_task_delegation(self, job):       
         print(f"Delegated task '{job.description}' to {job['Team']}.")
         self.logger.log_to_widget(f"Delegated task '{job.description}' to {job['Team']}.")
