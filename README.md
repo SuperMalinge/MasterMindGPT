@@ -119,8 +119,6 @@ Taskboard looks like this now:
 ```
 [Task][Level:2-1][Frontend][Prio:1][not solved][Build choose options for the menue] 
 [Task][Level:2-2][Backend][Prio:1][not solved][build the choose options for processing data] 
-...
-
 ```
 ## The Sections: Teams 3-1 to 3-4
 
