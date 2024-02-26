@@ -103,7 +103,6 @@ adding tasks like these:
 ```
 [Task][Level:1][Basic Plan][Prio:1][not solved][Basic plan on how the app should look like]
 
-
 ```
 
 - processing-> add tasks and subtasks for the teams to a Board > priorizing on what needs to be done first
