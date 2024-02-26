@@ -102,7 +102,7 @@ Our journey begins with the addition of tasks like these:
 adding tasks like these:
 ```
 [Task][Level:1][Basic Plan][Prio:1][not solved][Basic plan on how the app should look like]
-...
+
 
 ```
 
