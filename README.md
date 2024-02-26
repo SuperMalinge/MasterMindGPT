@@ -168,7 +168,6 @@ Taskboard looks like this now:
 ```
 [Task][Level:4-1][Frontend][Prio:1][not solved][Build choose options for the menue][Code] 
 [Task][Level:4-2][Backend][Prio:1][not solved][build the choose options for processing data][Code]
-
 ```
 
 ## The Encore: Teams 4-1 to 4-4
