@@ -279,7 +279,7 @@ class TaskBoardGUI:
     def check_queue(self):
         try:
             #count all jobs in the queue
-            #currently not used
+            #currently not used because it floots the terminal
             #job_count = sum('Job' in Job['Job'].lower() for Job in self.Jobs)
             #print("there are currently", job_count, "jobs in the queue")
             job_to_add = self.task_queue.get(block=False)  # Get a job from the queue
