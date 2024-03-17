@@ -60,7 +60,7 @@ class WorkflowManager:
             "Status": "unsolved",
             "SubJob": None
         }                
-        self.ceo_boss.delegate_task(job) # Delegate the task and add the job
+        self.ceo_boss.delegate_task(job,self.job_management_system) # Delegate the task and add the job
         self.task_queue.put(lambda: self.logger.log_to_widget(f"Delegated task: {processed_input}"))
         self.job_management_system.add_job(job)
         

@@ -72,7 +72,7 @@ class CEO:
             self.logger.log_to_widget(f"Error updating Listbox: {e}")
 
     # Delegate a task to the appropriate agent
-    def delegate_task(self, job):           
+    def delegate_task(self, job,Job_Management_System):           
         print(f"Delegating task: {job}") 
         self.logger.log_to_widget(f"Delegating task: {job}")  
         if not self.agents:
@@ -89,7 +89,7 @@ class CEO:
         # Delegate task to the appropriate agent based on job team
         agent = self.agents.get(job['Team'])        
         if agent:
-            agent.handle_task(job)
+            agent.handle_task(job, Job_Management_System)
             self.report_task_delegation(job)
         else:
             print(f"No matching agent found for team {job['Team']}.")
