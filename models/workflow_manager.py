@@ -12,8 +12,11 @@ import tkinter.messagebox as messagebox
 
 # this class is responsible for the retrieval of the assistant agent in the workflow_manager.py
 class CustomAssistantAgent(RetrieveAssistantAgent):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, task_queue, logger, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.task_queue = task_queue
+        self.logger = logger      
+
 
     def handle_task(self, job,Job_Management_System):        
         # Preprocess the job input to structure it correctly        
